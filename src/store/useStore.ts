@@ -298,8 +298,9 @@ interface QualityGadgetsState {
   updateCartQuantity: (variantId: string, quantity: number) => void;
   clearCart: () => void;
 
-  // Helpers de Cálculo en Vivo
+  // Helpers de Cálculo en Vivo & Sincronización Nube
   recalculateInventory: () => void;
+  syncFromDatabase: () => Promise<void>;
 }
 
 // DATOS SEMILLA INICIALES SEGUROS
@@ -667,7 +668,50 @@ export const useStore = create<QualityGadgetsState>()(
       cart: [],
 
       // ==========================================
-      // BRANDS CRUD
+      // DATABASE HYDRATION & SYNC
+      // ==========================================
+      syncFromDatabase: async () => {
+        try {
+          const prodsRes = await fetch('/api/products').catch(() => null);
+          if (prodsRes?.ok) {
+            const data = await prodsRes.json();
+            if (data.success && Array.isArray(data.products) && data.products.length > 0) {
+              set({ products: data.products });
+            }
+          }
+
+          const catsRes = await fetch('/api/categories').catch(() => null);
+          if (catsRes?.ok) {
+            const data = await catsRes.json();
+            if (data.success && Array.isArray(data.categories) && data.categories.length > 0) {
+              set({ categories: data.categories });
+            }
+          }
+
+          const brandsRes = await fetch('/api/brands').catch(() => null);
+          if (brandsRes?.ok) {
+            const data = await brandsRes.json();
+            if (data.success && Array.isArray(data.brands) && data.brands.length > 0) {
+              set({ brands: data.brands });
+            }
+          }
+
+          const ordersRes = await fetch('/api/admin/orders').catch(() => null);
+          if (ordersRes?.ok) {
+            const data = await ordersRes.json();
+            if (data.success && Array.isArray(data.orders)) {
+              set({ orders: data.orders });
+            }
+          }
+
+          get().recalculateInventory();
+        } catch (e) {
+          console.error('Error sincronizando con Vercel Postgres:', e);
+        }
+      },
+
+      // ==========================================
+      // BRANDS CRUD (POSTGRES SYNC)
       // ==========================================
       addBrand: (brandData) => {
         const name = brandData?.name || 'Nueva Marca';
@@ -679,22 +723,25 @@ export const useStore = create<QualityGadgetsState>()(
           name,
         };
         set((state) => ({ brands: [...(state.brands || []), newBrand] }));
+        fetch('/api/brands', { method: 'POST', body: JSON.stringify(newBrand) }).catch(() => {});
       },
 
       updateBrand: (id, brandData) => {
         set((state) => ({
           brands: (state.brands || []).map((b) => (b.id === id ? { ...b, ...brandData } : b)),
         }));
+        fetch('/api/brands', { method: 'POST', body: JSON.stringify({ id, ...brandData }) }).catch(() => {});
       },
 
       deleteBrand: (id) => {
         set((state) => ({
           brands: (state.brands || []).filter((b) => b.id !== id),
         }));
+        fetch(`/api/brands?id=${encodeURIComponent(id)}`, { method: 'DELETE' }).catch(() => {});
       },
 
       // ==========================================
-      // CATEGORIES CRUD
+      // CATEGORIES CRUD (POSTGRES SYNC)
       // ==========================================
       addCategory: (categoryData) => {
         const name = categoryData?.name || 'Nueva Categoría';
@@ -710,6 +757,7 @@ export const useStore = create<QualityGadgetsState>()(
           name,
         };
         set((state) => ({ categories: [...(state.categories || []), newCategory] }));
+        fetch('/api/categories', { method: 'POST', body: JSON.stringify(newCategory) }).catch(() => {});
       },
 
       updateCategory: (id, categoryData) => {
@@ -727,16 +775,18 @@ export const useStore = create<QualityGadgetsState>()(
             return updated;
           }),
         }));
+        fetch('/api/categories', { method: 'POST', body: JSON.stringify({ id, ...categoryData }) }).catch(() => {});
       },
 
       deleteCategory: (id) => {
         set((state) => ({
           categories: (state.categories || []).filter((c) => c.id !== id),
         }));
+        fetch(`/api/categories?id=${encodeURIComponent(id)}`, { method: 'DELETE' }).catch(() => {});
       },
 
       // ==========================================
-      // PRODUCTS CRUD
+      // PRODUCTS CRUD (POSTGRES SYNC)
       // ==========================================
       addProduct: (productData) => {
         const title = productData?.title || 'Nuevo Gadget';
@@ -752,6 +802,7 @@ export const useStore = create<QualityGadgetsState>()(
           products: [newProduct, ...(state.products || [])],
         }));
         get().recalculateInventory();
+        fetch('/api/products', { method: 'POST', body: JSON.stringify(newProduct) }).catch(() => {});
       },
 
       updateProduct: (id, productData) => {
@@ -767,6 +818,7 @@ export const useStore = create<QualityGadgetsState>()(
           ),
         }));
         get().recalculateInventory();
+        fetch('/api/products', { method: 'POST', body: JSON.stringify({ id, ...productData }) }).catch(() => {});
       },
 
       deleteProduct: (id) => {
@@ -775,6 +827,7 @@ export const useStore = create<QualityGadgetsState>()(
           cart: (state.cart || []).filter((c) => c.productId !== id),
         }));
         get().recalculateInventory();
+        fetch(`/api/products?id=${encodeURIComponent(id)}`, { method: 'DELETE' }).catch(() => {});
       },
 
       deleteSelectedProducts: (productIds) => {
@@ -784,6 +837,7 @@ export const useStore = create<QualityGadgetsState>()(
           cart: (state.cart || []).filter((c) => !idSet.has(c.productId)),
         }));
         get().recalculateInventory();
+        fetch('/api/products', { method: 'DELETE', body: JSON.stringify({ ids: productIds }) }).catch(() => {});
       },
 
       deleteAllProducts: () => {
@@ -792,6 +846,7 @@ export const useStore = create<QualityGadgetsState>()(
           cart: [],
         }));
         get().recalculateInventory();
+        fetch('/api/products?all=true', { method: 'DELETE' }).catch(() => {});
       },
 
       updatePhysicalStock: (productId, variantId, newPhysicalStock) => {

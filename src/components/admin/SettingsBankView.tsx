@@ -58,6 +58,38 @@ export function SettingsBankView() {
   const [passkeys, setPasskeys] = useState<StoredPasskeyUI[]>([]);
   const [isRegisteringPasskey, setIsRegisteringPasskey] = useState(false);
   const [passkeyError, setPasskeyError] = useState<string | null>(null);
+
+  // Database Connection State
+  const [dbStatus, setDbStatus] = useState<{ connected: boolean; message: string }>({ connected: false, message: 'Verificando...' });
+  const [isInitializingDb, setIsInitializingDb] = useState(false);
+  const [dbInitMessage, setDbInitMessage] = useState<string | null>(null);
+
+  // Check Database status on mount
+  useEffect(() => {
+    fetch('/api/admin/db/init')
+      .then((res) => res.json())
+      .then((data) => setDbStatus(data))
+      .catch(() => setDbStatus({ connected: false, message: 'Error conectando con el backend' }));
+  }, []);
+
+  const handleInitPostgresDb = async () => {
+    setIsInitializingDb(true);
+    setDbInitMessage(null);
+    try {
+      const res = await fetch('/api/admin/db/init', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setDbInitMessage('✅ ' + data.message + (data.seeded ? ' (Datos semilla importados)' : ''));
+        useStore.getState().syncFromDatabase();
+      } else {
+        setDbInitMessage('⚠️ ' + (data.message || data.error || 'Error inicializando'));
+      }
+    } catch (e: any) {
+      setDbInitMessage('❌ Error: ' + e?.message);
+    } finally {
+      setIsInitializingDb(false);
+    }
+  };
   const [newDeviceName, setNewDeviceName] = useState('Dispositivo Principal (Windows Hello / Touch ID)');
 
   // Load Passkeys

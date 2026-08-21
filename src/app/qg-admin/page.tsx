@@ -95,6 +95,7 @@ export default function QgAdminPage() {
     updatePhysicalStock,
     bulkImportProducts,
     recalculateInventory,
+    syncFromDatabase,
   } = useStore();
 
   const safeBrands = brands || [];
@@ -135,7 +136,7 @@ export default function QgAdminPage() {
   const [sudoActionDescription, setSudoActionDescription] = useState('');
   const [sudoError, setSudoError] = useState<string | null>(null);
 
-  // Check Active Session
+  // Check Active Session & Sync Postgres Database
   useEffect(() => {
     const sessionToken = localStorage.getItem('qg_admin_token');
     const sessionExpiry = localStorage.getItem('qg_admin_expiry');
@@ -143,7 +144,8 @@ export default function QgAdminPage() {
       setIsAuthenticated(true);
     }
     recalculateInventory();
-  }, [recalculateInventory]);
+    syncFromDatabase();
+  }, [recalculateInventory, syncFromDatabase]);
 
   // LOGIN HANDLERS
   const handlePasskeyLogin = async () => {
