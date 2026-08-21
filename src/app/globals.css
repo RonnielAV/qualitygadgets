@@ -1,0 +1,229 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand Accent Tokens */
+  --brand-ultraviolet: #9D00FF;
+  --brand-cyan: #00D2FF;
+  --brand-magenta: #E024C3;
+  --brand-indigo: #241442;
+
+  /* Surfaces & Backgrounds (OLED Dark) */
+  --bg-obsidian: #08070D;
+  --surface-dark: #121124;
+  --surface-elevated: #1A1833;
+  --border-subtle: #2B264A;
+  --border-glow: rgba(157, 0, 255, 0.35);
+
+  /* Typography */
+  --text-pure: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-inverse: #08070D;
+
+  /* Gradients */
+  --grad-logo: linear-gradient(135deg, #00D2FF 0%, #9D00FF 50%, #E024C3 100%);
+  --grad-btn: linear-gradient(90deg, #9D00FF 0%, #E024C3 100%);
+  --grad-surface: linear-gradient(180deg, rgba(18, 17, 36, 0.85) 0%, rgba(8, 7, 13, 0.95) 100%);
+
+  /* Default App Variables */
+  --background: #08070D;
+  --foreground: #F8FAFC;
+}
+
+body {
+  color: var(--text-pure);
+  background-color: var(--bg-obsidian);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(at 15% 15%, rgba(157, 0, 255, 0.08) 0px, transparent 50%),
+    radial-gradient(at 85% 85%, rgba(0, 210, 255, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(224, 36, 195, 0.04) 0px, transparent 60%);
+  background-attachment: fixed;
+}
+
+/* ============================================================================
+   CLASES UTILITARIAS PERSONALIZADAS Y SISTEMA DE DISEÑO
+   ============================================================================ */
+
+/* Gradiente de Texto Oficial de Quality Gadgets */
+.text-logo-gradient {
+  background: linear-gradient(135deg, #00D2FF 0%, #9D00FF 50%, #E024C3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-cyan-gradient {
+  background: linear-gradient(135deg, #00D2FF 0%, #9D00FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-magenta-gradient {
+  background: linear-gradient(135deg, #E024C3 0%, #9D00FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Tarjeta Glassmorphism */
+.glass-card {
+  background: rgba(18, 17, 36, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(43, 38, 74, 0.85);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-card-elevated {
+  background: rgba(26, 24, 51, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(157, 0, 255, 0.25);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Botón CTA con Glow */
+.btn-primary-glow {
+  background: linear-gradient(90deg, #9D00FF 0%, #E024C3 100%);
+  color: #F8FAFC;
+  box-shadow: 0 0 20px rgba(157, 0, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary-glow:hover {
+  box-shadow: 0 0 30px rgba(224, 36, 195, 0.6), 0 0 15px rgba(157, 0, 255, 0.8);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.btn-cyan-glow {
+  background: linear-gradient(90deg, #00D2FF 0%, #9D00FF 100%);
+  color: #08070D;
+  font-weight: 800;
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-cyan-glow:hover {
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.7);
+  transform: translateY(-2px);
+}
+
+/* Bordes Iluminados */
+.border-glow {
+  border-color: rgba(157, 0, 255, 0.5);
+  box-shadow: 0 0 15px rgba(157, 0, 255, 0.3);
+}
+
+.border-glow-cyan {
+  border-color: rgba(0, 210, 255, 0.5);
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+}
+
+/* Glow Shadows */
+.glow-purple {
+  box-shadow: 0 0 25px rgba(157, 0, 255, 0.45);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 25px rgba(0, 210, 255, 0.45);
+}
+
+.glow-magenta {
+  box-shadow: 0 0 25px rgba(224, 36, 195, 0.45);
+}
+
+/* Custom Scrollbar OLED */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08070D;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2B264A;
+  border-radius: 9999px;
+  border: 2px solid #08070D;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9D00FF;
+}
+
+/* ============================================================================
+   ESTILOS DE IMPRESIÓN AISLADA (ETIQUETAS TÉRMICAS 4x6 PULGADAS SIN BLANCO)
+   ============================================================================ */
+@media print {
+  @page {
+    size: 4in 6in;
+    margin: 0;
+  }
+  body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 4in !important;
+    height: 6in !important;
+    background: #ffffff !important;
+    overflow: hidden !important;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  #printArea, #printArea *, .thermal-label, .thermal-label *, .sheet, .sheet * {
+    visibility: visible !important;
+  }
+  #printArea {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 4in !important;
+    height: 6in !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    display: block !important;
+    z-index: 999999 !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    break-after: avoid !important;
+    break-before: avoid !important;
+  }
+  .sheet {
+    width: 4in !important;
+    height: 6in !important;
+    max-width: 4in !important;
+    max-height: 6in !important;
+    margin: 0 !important;
+    padding: 0.08in !important;
+    box-sizing: border-box !important;
+    border: none !important;
+    box-shadow: none !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-after: avoid !important;
+    break-inside: avoid !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .thermal-label {
+    width: 3.84in !important;
+    height: 5.84in !important;
+    max-height: 5.84in !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    border: 3px solid #000000 !important;
+    margin: 0 auto !important;
+    padding: 0.08in !important;
+    gap: 0.04in !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  }
+}
