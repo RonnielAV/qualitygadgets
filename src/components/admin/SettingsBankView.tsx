@@ -256,6 +256,71 @@ export function SettingsBankView() {
       )}
 
       {/* ============================================================ */}
+      {/* 0. BASE DE DATOS EN LA NUBE (VERCEL POSTGRES) */}
+      {/* ============================================================ */}
+      <div className="rounded-3xl border border-brand-indigo bg-dark-surface p-6 shadow-glow-cyan space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-dark-border/80 pb-4">
+          <div>
+            <h3 className="text-base font-black text-white flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-brand-cyan" />
+              <span>Base de Datos Centralizada: Vercel Postgres</span>
+            </h3>
+            <p className="text-xs text-text-muted mt-1">
+              Catálogo de productos, variantes, pedidos OMS y registros de auditoría sincronizados en tiempo real en la nube.
+            </p>
+          </div>
+
+          <div
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-black ${
+              dbStatus.connected
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+            }`}
+          >
+            <div className={`h-2 w-2 rounded-full ${dbStatus.connected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
+            <span>{dbStatus.connected ? 'POSTGRES EN LÍNEA' : 'MODO LOCAL ACTIVO'}</span>
+          </div>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-dark-obsidian border border-dark-border text-xs space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-text-muted">Estado de Conexión en Servidor:</span>
+            <strong className="text-white font-mono">{dbStatus.message}</strong>
+          </div>
+
+          {dbInitMessage && (
+            <div className="p-3 rounded-xl bg-dark-surface border border-brand-cyan/40 text-xs font-bold text-brand-cyan">
+              {dbInitMessage}
+            </div>
+          )}
+
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={handleInitPostgresDb}
+              disabled={isInitializingDb}
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-ultraviolet to-brand-magenta px-5 py-2.5 text-xs font-black text-white shadow-glow-purple cursor-pointer hover:brightness-110 disabled:opacity-50"
+            >
+              {isInitializingDb ? <RefreshCw className="h-4 w-4 animate-spin mr-1" /> : <ShieldCheck className="h-4 w-4 mr-1" />}
+              <span>{isInitializingDb ? 'Inicializando...' : 'Crear Tablas & Sembrar Datos en Postgres'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                useStore.getState().syncFromDatabase();
+                alert('Sincronización con base de datos ejecutada.');
+              }}
+              className="inline-flex items-center gap-2 rounded-xl border border-dark-border bg-dark-surface px-4 py-2.5 text-xs font-bold text-text-muted hover:text-white hover:border-brand-cyan cursor-pointer"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span>Forzar Sincronización Inmediata</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ============================================================ */}
       {/* 1. SECCIÓN PRINCIPAL: AUTENTICACIÓN BIOMÉTRICA FIDO2 / PASSKEYS */}
       {/* ============================================================ */}
       <div className="rounded-3xl border border-brand-ultraviolet bg-dark-surface p-6 shadow-glow-purple space-y-6">
