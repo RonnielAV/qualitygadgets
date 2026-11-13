@@ -1,0 +1,25 @@
+{
+  "short_name": "Eliotte MUA",
+  "name": "Eliotte MUA - Cotizaciones y Facturas",
+  "description": "Sistema oficial de Cotizaciones, Facturas y Master Class para Eliotte MUA",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/logo-white-trimmed.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#1c1917",
+  "background_color": "#0c0a09"
+}

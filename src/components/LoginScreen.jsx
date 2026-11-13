@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Sparkles, Lock, User, ArrowRight, HardDriveUpload, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Lock, User, ArrowRight, HardDriveUpload, ShieldCheck, CheckCircle2, Eye, EyeOff, Smartphone } from 'lucide-react';
 import { authenticateUser } from '../utils/userUtils';
 
-export default function LoginScreen({ onLogin, onDirectRestoreBackup }) {
-  const [username, setUsername] = useState('eliotte');
-  const [password, setPassword] = useState('mua2026');
-  const [rememberMe, setRememberMe] = useState(true);
+export default function LoginScreen({ onLogin, onDirectRestoreBackup, onInstallApp, isInstallable }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -22,7 +23,7 @@ export default function LoginScreen({ onLogin, onDirectRestoreBackup }) {
           rememberMe
         });
       } else {
-        setError(authResult.message || 'Usuario o contraseña incorrectos. (Prueba: eliotte / mua2026)');
+        setError(authResult.message || 'Usuario o contraseña incorrectos. Verifica tus credenciales.');
         setIsSubmitting(false);
       }
     }, 300);
@@ -83,9 +84,10 @@ export default function LoginScreen({ onLogin, onDirectRestoreBackup }) {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="eliotte"
+                placeholder="Ingresa tu usuario (ej: eliotte)"
                 required
-                className="w-full pl-10 pr-4 py-2.5 bg-stone-800/80 border border-stone-700 rounded-xl text-sm text-white placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all"
+                autoComplete="username"
+                className="w-full pl-10 pr-4 py-2.5 bg-stone-800/80 border border-stone-700 rounded-xl text-sm text-white placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all font-mono"
               />
             </div>
           </div>
@@ -96,20 +98,30 @@ export default function LoginScreen({ onLogin, onDirectRestoreBackup }) {
               <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider">
                 Contraseña
               </label>
-              <span className="text-[11px] text-stone-500 font-mono">
-                Default: mua2026
-              </span>
             </div>
             <div className="relative">
               <Lock className="w-4 h-4 text-stone-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Ingresa tu contraseña"
                 required
-                className="w-full pl-10 pr-4 py-2.5 bg-stone-800/80 border border-stone-700 rounded-xl text-sm text-white placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all"
+                autoComplete="current-password"
+                className="w-full pl-10 pr-11 py-2.5 bg-stone-800/80 border border-stone-700 rounded-xl text-sm text-white placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all font-mono"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-stone-300 transition-colors p-1"
+                title={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
             </div>
           </div>
 
@@ -152,6 +164,19 @@ export default function LoginScreen({ onLogin, onDirectRestoreBackup }) {
               className="hidden"
             />
           </label>
+
+          {onInstallApp && (
+            <div className="mt-4 pt-3 border-t border-stone-800/80">
+              <button
+                type="button"
+                onClick={onInstallApp}
+                className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 hover:text-white border border-rose-500/30 text-xs font-semibold transition-all shadow-sm"
+              >
+                <Smartphone className="w-4 h-4 text-rose-400" />
+                <span>Instalar como App en tu Celular</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

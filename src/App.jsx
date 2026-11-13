@@ -4,6 +4,7 @@ import Form from './components/Form';
 import PreviewQuote from './components/PreviewQuote';
 import PreviewInvoice from './components/PreviewInvoice';
 import PreviewMasterClass from './components/PreviewMasterClass';
+import DocumentCanvasViewer from './components/DocumentCanvasViewer';
 import HistoryModal from './components/HistoryModal';
 import LoginScreen from './components/LoginScreen';
 import LoginBackupPromptModal from './components/LoginBackupPromptModal';
@@ -56,6 +57,8 @@ export default function App() {
   const [showLogoutConfirmModal, setShowLogoutConfirmModal] = useState(false);
   const [users, setUsers] = useState(() => getStoredUsers());
   const [isUsersModalOpen, setIsUsersModalOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstallable, setIsInstallable] = useState(false);
 
   const [docType, setDocType] = useState('quote'); // 'quote' | 'invoice' | 'masterclass'
   const [mobileView, setMobileView] = useState('form'); // 'form' | 'preview'
@@ -175,6 +178,41 @@ export default function App() {
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  // ================= PWA INSTALLATION HOOK =================
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    window.addEventListener('appinstalled', () => {
+      setIsInstallable(false);
+      setDeferredPrompt(null);
+      showToast('¡Eliotte MUA App instalada en tu dispositivo!');
+    });
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setIsInstallable(false);
+        showToast('¡Instalando Eliotte MUA en tu celular!');
+      }
+      setDeferredPrompt(null);
+    } else {
+      alert('Para instalar en tu celular:\n\n1. En Android (Chrome): Toca el menú de 3 puntos arriba a la derecha y selecciona "Instalar aplicación" o "Agregar a la pantalla principal".\n\n2. En iPhone (Safari): Toca el botón Compartir (icono con flecha) y selecciona "Agregar al inicio".');
+    }
   };
 
   // ================= AUTHENTICATION HANDLERS =================
@@ -511,6 +549,8 @@ export default function App() {
       <LoginScreen 
         onLogin={handleLogin} 
         onDirectRestoreBackup={handleDirectRestoreBackup} 
+        onInstallApp={handleInstallApp}
+        isInstallable={isInstallable}
       />
     );
   }
@@ -533,6 +573,8 @@ export default function App() {
           onImportBackup={handleImportBackup}
           onOpenLogoutModal={handleOpenLogoutModal}
           onOpenUsersModal={() => setIsUsersModalOpen(true)}
+          onInstallApp={handleInstallApp}
+          isInstallable={isInstallable}
           currentUser={currentUser}
           historyCount={history.length}
           isExporting={isExporting}
@@ -615,24 +657,26 @@ export default function App() {
         </div>
 
         {/* Right Column: Live High-Fidelity Canvas Preview */}
-        <div className={`lg:col-span-7 xl:col-span-7 flex flex-col items-center justify-start overflow-x-hidden ${mobileView === 'preview' ? 'block' : 'hidden lg:block'}`}>
+        <div className={`lg:col-span-7 xl:col-span-7 flex flex-col items-center justify-start overflow-x-auto w-full ${mobileView === 'preview' ? 'block' : 'hidden lg:block'}`}>
           <div className="w-full flex flex-col items-center">
-            {docType === 'quote' && (
-              <PreviewQuote doc={quoteDoc} quoteRef={quoteRef} />
-            )}
+            <DocumentCanvasViewer docType={docType}>
+              {docType === 'quote' && (
+                <PreviewQuote doc={quoteDoc} quoteRef={quoteRef} />
+              )}
 
-            {docType === 'invoice' && (
-              <PreviewInvoice doc={invoiceDoc} invoiceRef={invoiceRef} />
-            )}
+              {docType === 'invoice' && (
+                <PreviewInvoice doc={invoiceDoc} invoiceRef={invoiceRef} />
+              )}
 
-            {docType === 'masterclass' && (
-              <PreviewMasterClass
-                doc={masterClassDoc}
-                masterClassRef={masterClassRef}
-                activePage={activeMasterClassPage}
-                setActivePage={setActiveMasterClassPage}
-              />
-            )}
+              {docType === 'masterclass' && (
+                <PreviewMasterClass
+                  doc={masterClassDoc}
+                  masterClassRef={masterClassRef}
+                  activePage={activeMasterClassPage}
+                  setActivePage={setActiveMasterClassPage}
+                />
+              )}
+            </DocumentCanvasViewer>
           </div>
         </div>
       </div>

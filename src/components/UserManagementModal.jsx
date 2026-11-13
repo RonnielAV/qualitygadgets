@@ -10,7 +10,9 @@ import {
   User, 
   Check, 
   AlertCircle,
-  Lock
+  Lock,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 export default function UserManagementModal({ 
@@ -25,9 +27,18 @@ export default function UserManagementModal({
   const [formName, setFormName] = useState('');
   const [formUsername, setFormUsername] = useState('');
   const [formPassword, setFormPassword] = useState('');
+  const [showFormPassword, setShowFormPassword] = useState(false);
+  const [visiblePasswords, setVisiblePasswords] = useState({});
   const [formRole, setFormRole] = useState('Asistente de Maquillaje');
   const [formIsAdmin, setFormIsAdmin] = useState(false);
   const [formError, setFormError] = useState('');
+
+  const toggleVisiblePassword = (userId) => {
+    setVisiblePasswords(prev => ({
+      ...prev,
+      [userId]: !prev[userId]
+    }));
+  };
 
   if (!isOpen) return null;
 
@@ -192,9 +203,24 @@ export default function UserManagementModal({
                           Cargo: <span className="text-stone-700">{u.role || 'Personal'}</span>
                         </p>
 
-                        <p className="text-[11px] text-stone-400 mt-0.5">
-                          Clave actual: <strong className="font-mono text-stone-600">{u.password}</strong>
-                        </p>
+                        <div className="flex items-center space-x-1.5 text-[11px] text-stone-400 mt-0.5">
+                          <span>Clave:</span>
+                          <strong className="font-mono text-stone-600">
+                            {visiblePasswords[u.id] ? u.password : '••••••••'}
+                          </strong>
+                          <button
+                            type="button"
+                            onClick={() => toggleVisiblePassword(u.id)}
+                            className="text-stone-400 hover:text-stone-700 transition-colors p-0.5"
+                            title={visiblePasswords[u.id] ? 'Ocultar contraseña' : 'Ver contraseña'}
+                          >
+                            {visiblePasswords[u.id] ? (
+                              <EyeOff className="w-3 h-3" />
+                            ) : (
+                              <Eye className="w-3 h-3" />
+                            )}
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -289,14 +315,28 @@ export default function UserManagementModal({
                     <label className="block text-[11px] font-bold text-stone-700 uppercase tracking-wider mb-1">
                       Contraseña / PIN
                     </label>
-                    <input
-                      type="text"
-                      value={formPassword}
-                      onChange={(e) => setFormPassword(e.target.value)}
-                      placeholder="ej: clave123"
-                      required
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showFormPassword ? 'text' : 'password'}
+                        value={formPassword}
+                        onChange={(e) => setFormPassword(e.target.value)}
+                        placeholder="ej: clave123"
+                        required
+                        className="w-full px-3 pr-8 py-2 bg-white border border-stone-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowFormPassword(!showFormPassword)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 transition-colors"
+                        title={showFormPassword ? 'Ocultar' : 'Mostrar'}
+                      >
+                        {showFormPassword ? (
+                          <EyeOff className="w-3.5 h-3.5" />
+                        ) : (
+                          <Eye className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                    </div>
                   </div>
 
                   {/* Rol o Cargo */}

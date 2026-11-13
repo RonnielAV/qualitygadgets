@@ -60,12 +60,12 @@ export default function PreviewQuote({ doc, quoteRef }) {
   };
 
   return (
-    <div className="flex justify-center p-2 sm:p-4 select-none">
+    <div className="flex justify-center p-0 sm:p-2 select-none w-full">
       {/* A4 Proportion Container: 1414 x 2000 ratio (1 : 1.4144) matching original Canva arts */}
       <div
         ref={quoteRef}
         id="quote-document-canvas"
-        className="w-full max-w-[760px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-300"
+        className="w-full max-w-[750px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-300"
         style={{
           aspectRatio: '1414 / 2000',
           minHeight: '880px',

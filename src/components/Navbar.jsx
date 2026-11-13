@@ -18,7 +18,8 @@ import {
   FileJson,
   LogOut,
   User,
-  Users
+  Users,
+  Smartphone
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -35,6 +36,8 @@ export default function Navbar({
   onImportBackup,
   onOpenLogoutModal,
   onOpenUsersModal,
+  onInstallApp,
+  isInstallable,
   currentUser,
   historyCount, 
   isExporting, 
@@ -214,6 +217,20 @@ export default function Navbar({
             <FileDown className="w-3.5 h-3.5" />
             <span>PDF</span>
           </button>
+
+          {/* PWA Install Button */}
+          {onInstallApp && (
+            <button
+              type="button"
+              onClick={onInstallApp}
+              className="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-all flex items-center space-x-1 shadow-2xs"
+              title="Instalar como app en tu celular o computadora"
+            >
+              <Smartphone className="w-3.5 h-3.5 text-rose-600" />
+              <span className="hidden sm:inline">Instalar App</span>
+              <span className="sm:hidden">App</span>
+            </button>
+          )}
 
           {/* User Profile, Equipo & Logout */}
           <div className="flex items-center space-x-1 pl-1 border-l border-stone-300">

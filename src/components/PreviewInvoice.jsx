@@ -48,12 +48,12 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
   const logoSrc = getLogoSrc(logoVariant);
 
   return (
-    <div className="flex justify-center p-2 sm:p-4 select-none">
+    <div className="flex justify-center p-0 sm:p-2 select-none w-full">
       {/* A4 Container */}
       <div
         ref={invoiceRef}
         id="invoice-document-canvas"
-        className="w-full max-w-[760px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
+        className="w-full max-w-[750px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
         style={{
           aspectRatio: '1414 / 2000',
           minHeight: '860px',

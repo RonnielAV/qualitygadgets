@@ -38,7 +38,7 @@ export default function PreviewMasterClass({ doc, masterClassRef, activePage, se
   ];
 
   return (
-    <div className="flex flex-col items-center p-2 sm:p-4 select-none w-full">
+    <div className="flex flex-col items-center p-0 sm:p-2 select-none w-full">
       {/* ================= PAGE SELECTOR TOOLBAR ================= */}
       <div className="no-print mb-4 w-full max-w-[760px] bg-white p-2 rounded-2xl shadow-sm border border-stone-200 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center space-x-1 overflow-x-auto py-1">
