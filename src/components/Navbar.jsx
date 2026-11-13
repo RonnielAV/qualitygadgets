@@ -36,6 +36,8 @@ export default function Navbar({
   onImportBackup,
   onOpenLogoutModal,
   onOpenUsersModal,
+  onOpenClientsModal,
+  clientsCount = 0,
   onInstallApp,
   isInstallable,
   currentUser,
@@ -153,6 +155,24 @@ export default function Navbar({
               </span>
             )}
           </button>
+
+          {/* Client Directory Button */}
+          {onOpenClientsModal && (
+            <button
+              type="button"
+              onClick={onOpenClientsModal}
+              className="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium text-stone-700 bg-stone-100 hover:bg-stone-200 transition-all flex items-center space-x-1"
+              title="Ver y gestionar directorio de clientes frecuentes"
+            >
+              <Users className="w-3.5 h-3.5 text-stone-600" />
+              <span className="hidden sm:inline">Clientes</span>
+              {clientsCount > 0 && (
+                <span className="px-1.5 py-0.2 bg-rose-100 text-rose-800 rounded-full text-[10px] font-mono font-bold">
+                  {clientsCount}
+                </span>
+              )}
+            </button>
+          )}
 
           {/* Save Button */}
           <button

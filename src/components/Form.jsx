@@ -37,7 +37,9 @@ import {
   Tag,
   PlusCircle,
   Percent,
-  Coins
+  Coins,
+  Users,
+  UserPlus
 } from 'lucide-react';
 import { isNumberDuplicated } from '../utils/numberingUtils';
 
@@ -53,6 +55,11 @@ export default function Form({
   activeMasterClassPage,
   setActiveMasterClassPage,
   history = [],
+  clients = [],
+  onSaveClients,
+  onOpenClientsModal,
+  onSelectClientForDoc,
+  showToast,
   onNewQuote,
   onNewInvoice,
   onNextQuoteNumber,
@@ -72,6 +79,76 @@ export default function Form({
       setInvoiceDoc(prev => ({ ...prev, [field]: value }));
     } else {
       setMasterClassDoc(prev => ({ ...prev, [field]: value }));
+    }
+  };
+
+  // ================= CLIENT SELECTION & QUICK-SAVE HANDLERS =================
+  const handleApplySelectedClient = (clientId) => {
+    if (!clientId) return;
+    const selected = clients.find(c => c.id === clientId);
+    if (selected) {
+      if (onSelectClientForDoc) {
+        onSelectClientForDoc(selected);
+      } else {
+        updateCurrentDoc('clientName', selected.name || '');
+        updateCurrentDoc('company', selected.company || '');
+        updateCurrentDoc('rnc', selected.rnc || '');
+        updateCurrentDoc('clientEmail', selected.email || '');
+        updateCurrentDoc('clientPhone', selected.phone || '');
+      }
+      showToast?.(`Datos de "${selected.name}" cargados en el documento.`);
+    }
+  };
+
+  const handleQuickSaveCurrentClient = () => {
+    const targetDoc = isQuote ? quoteDoc : invoiceDoc;
+    const name = (targetDoc.clientName || '').trim();
+    if (!name) {
+      showToast?.('⚠️ Escribe el nombre del cliente antes de guardarlo.');
+      return;
+    }
+
+    const company = (targetDoc.company || '').trim();
+    const rnc = (targetDoc.rnc || '').trim();
+    const email = (targetDoc.clientEmail || '').trim();
+    const phone = (targetDoc.clientPhone || '').trim();
+
+    // Check if client already exists by name or company
+    const existingIndex = clients.findIndex(c => 
+      c.name?.toLowerCase().trim() === name.toLowerCase() ||
+      (company && c.company && c.company.toLowerCase().trim() === company.toLowerCase())
+    );
+
+    let updatedClients;
+    if (existingIndex >= 0) {
+      updatedClients = [...clients];
+      updatedClients[existingIndex] = {
+        ...updatedClients[existingIndex],
+        name: name,
+        company: company,
+        rnc: rnc,
+        email: email,
+        phone: phone,
+        updatedAt: new Date().toISOString(),
+      };
+      showToast?.(`¡Cliente "${name}" actualizado en el directorio!`);
+    } else {
+      const newClient = {
+        id: 'cli_' + Date.now(),
+        name: name,
+        company: company,
+        rnc: rnc,
+        email: email,
+        phone: phone,
+        notes: isQuote ? `Evento: ${targetDoc.eventDate || ''}` : `Factura: ${targetDoc.projectDescription || ''}`,
+        createdAt: new Date().toISOString(),
+      };
+      updatedClients = [newClient, ...clients];
+      showToast?.(`¡Cliente "${name}" guardado con éxito en el directorio!`);
+    }
+
+    if (onSaveClients) {
+      onSaveClients(updatedClients);
     }
   };
 
@@ -457,6 +534,25 @@ export default function Form({
                     placeholder="Ej: BEIA Academy / Estudio Privado"
                     className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-400 outline-none"
                   />
+                  {clients.length > 0 && (
+                    <select
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          updateCurrentDoc('clientName', e.target.value);
+                          e.target.value = '';
+                        }
+                      }}
+                      defaultValue=""
+                      className="mt-1.5 w-full px-2 py-1 bg-stone-50 border border-stone-200 rounded-lg text-[11px] text-stone-600 focus:ring-2 focus:ring-amber-400 outline-none"
+                    >
+                      <option value="" disabled>-- Autocompletar desde Directorio de Clientes --</option>
+                      {clients.map((c) => (
+                        <option key={c.id} value={c.company || c.name}>
+                          {c.name} {c.company ? `(${c.company})` : ''}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
 
                 <div>
@@ -956,6 +1052,45 @@ export default function Form({
               )}
             </div>
 
+            {/* Quick Client Selection Banner */}
+            <div className="bg-rose-50/70 border border-rose-200/90 rounded-2xl p-3.5 space-y-2.5 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-bold text-rose-950 uppercase tracking-wider flex items-center space-x-1.5">
+                  <Users className="w-3.5 h-3.5 text-rose-600" />
+                  <span>Directorio de Clientes:</span>
+                </label>
+                {onOpenClientsModal && (
+                  <button
+                    type="button"
+                    onClick={onOpenClientsModal}
+                    className="text-[11px] text-rose-700 hover:text-rose-900 font-bold underline underline-offset-2 flex items-center space-x-1 transition-colors"
+                  >
+                    <span>Abrir Directorio ({clients.length})</span>
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <select
+                  onChange={(e) => {
+                    handleApplySelectedClient(e.target.value);
+                    e.target.value = '';
+                  }}
+                  defaultValue=""
+                  className="w-full px-3 py-2 bg-white border border-rose-200 rounded-xl text-xs text-stone-900 font-semibold focus:ring-2 focus:ring-rose-400 outline-none shadow-2xs"
+                >
+                  <option value="" disabled>
+                    ⚡ Selecciona un cliente para autocompletar ({clients.length} disponibles)...
+                  </option>
+                  {clients.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} {c.company ? `— ${c.company}` : ''} {c.rnc ? `(RNC: ${c.rnc})` : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             <h3 className="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">
               Datos del Cliente y Facturación
             </h3>
@@ -1091,6 +1226,28 @@ export default function Form({
                 />
               </div>
             )}
+
+            {/* Quick Save Client to Directory */}
+            <div className="bg-stone-50 border border-stone-200/90 rounded-2xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-2xs">
+              <div className="space-y-0.5">
+                <span className="text-xs font-bold text-stone-900 flex items-center space-x-1.5">
+                  <UserPlus className="w-3.5 h-3.5 text-rose-600" />
+                  <span>¿Cliente nuevo o datos modificados?</span>
+                </span>
+                <p className="text-[11px] text-stone-500">
+                  Guárdalo en tu directorio con un solo clic para usarlo en el futuro.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleQuickSaveCurrentClient}
+                className="w-full sm:w-auto px-3.5 py-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl flex items-center justify-center space-x-1.5 shadow-2xs transition-all active:scale-[0.98] shrink-0"
+                title="Guardar este cliente en el directorio"
+              >
+                <UserPlus className="w-3.5 h-3.5 text-rose-400" />
+                <span>Guardar en Directorio</span>
+              </button>
+            </div>
 
             {/* Currency selector */}
             <div className="pt-3 border-t border-stone-200 flex items-center space-x-4">

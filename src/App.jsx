@@ -10,11 +10,17 @@ import LoginScreen from './components/LoginScreen';
 import LoginBackupPromptModal from './components/LoginBackupPromptModal';
 import LogoutConfirmModal from './components/LogoutConfirmModal';
 import UserManagementModal from './components/UserManagementModal';
+import ClientManagementModal from './components/ClientManagementModal';
 import { 
   getStoredUsers, 
   saveStoredUsers, 
   STORAGE_USERS_KEY 
 } from './utils/userUtils';
+import { 
+  getStoredClients, 
+  saveStoredClients, 
+  STORAGE_CLIENTS_KEY 
+} from './utils/clientUtils';
 import { 
   downloadElementAsPdf, 
   downloadElementAsImage, 
@@ -57,6 +63,8 @@ export default function App() {
   const [showLogoutConfirmModal, setShowLogoutConfirmModal] = useState(false);
   const [users, setUsers] = useState(() => getStoredUsers());
   const [isUsersModalOpen, setIsUsersModalOpen] = useState(false);
+  const [clients, setClients] = useState(() => getStoredClients());
+  const [isClientsModalOpen, setIsClientsModalOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstallable, setIsInstallable] = useState(false);
 
@@ -261,6 +269,38 @@ export default function App() {
     saveStoredUsers(updatedUsers);
   };
 
+  const handleSaveClients = (updatedClients) => {
+    setClients(updatedClients);
+    saveStoredClients(updatedClients);
+  };
+
+  const handleSelectClientForDoc = (client) => {
+    if (docType === 'quote') {
+      setQuoteDoc(prev => ({
+        ...prev,
+        clientName: client.name || '',
+        company: client.company || '',
+        rnc: client.rnc || '',
+        clientEmail: client.email || '',
+        clientPhone: client.phone || '',
+      }));
+    } else if (docType === 'invoice') {
+      setInvoiceDoc(prev => ({
+        ...prev,
+        clientName: client.name || '',
+        company: client.company || '',
+        rnc: client.rnc || '',
+        clientEmail: client.email || '',
+        clientPhone: client.phone || '',
+      }));
+    } else {
+      setMasterClassDoc(prev => ({
+        ...prev,
+        clientName: client.company || client.name || '',
+      }));
+    }
+  };
+
   // ================= CONSECUTIVE NUMBER GENERATION =================
   const handleNextQuoteNumber = () => {
     const nextNum = getNextConsecutiveNumber('quote', history, quoteDoc.quoteNumber);
@@ -318,6 +358,7 @@ export default function App() {
         exportedAt: new Date().toISOString(),
         counters: getStoredCounters(),
         users: users,
+        clients: clients,
         currentDocs: {
           docType,
           quoteDoc,
@@ -367,6 +408,11 @@ export default function App() {
         if (Array.isArray(parsed.users) && parsed.users.length > 0) {
           setUsers(parsed.users);
           saveStoredUsers(parsed.users);
+        }
+
+        if (Array.isArray(parsed.clients) && parsed.clients.length > 0) {
+          setClients(parsed.clients);
+          saveStoredClients(parsed.clients);
         }
 
         if (Array.isArray(parsed.history)) {
@@ -573,6 +619,8 @@ export default function App() {
           onImportBackup={handleImportBackup}
           onOpenLogoutModal={handleOpenLogoutModal}
           onOpenUsersModal={() => setIsUsersModalOpen(true)}
+          onOpenClientsModal={() => setIsClientsModalOpen(true)}
+          clientsCount={clients.length}
           onInstallApp={handleInstallApp}
           isInstallable={isInstallable}
           currentUser={currentUser}
@@ -649,6 +697,11 @@ export default function App() {
             activeMasterClassPage={activeMasterClassPage}
             setActiveMasterClassPage={setActiveMasterClassPage}
             history={history}
+            clients={clients}
+            onSaveClients={handleSaveClients}
+            onOpenClientsModal={() => setIsClientsModalOpen(true)}
+            onSelectClientForDoc={handleSelectClientForDoc}
+            showToast={showToast}
             onNewQuote={handleNewDocument}
             onNewInvoice={handleNewDocument}
             onNextQuoteNumber={handleNextQuoteNumber}
@@ -754,6 +807,16 @@ export default function App() {
         users={users}
         onSaveUsers={handleSaveUsers}
         currentUser={currentUser}
+        showToast={showToast}
+      />
+
+      {/* Client Directory & Management Modal */}
+      <ClientManagementModal
+        isOpen={isClientsModalOpen}
+        onClose={() => setIsClientsModalOpen(false)}
+        clients={clients}
+        onSaveClients={handleSaveClients}
+        onSelectClientForDoc={handleSelectClientForDoc}
         showToast={showToast}
       />
     </div>
