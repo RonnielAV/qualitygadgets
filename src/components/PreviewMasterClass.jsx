@@ -1,13 +1,12 @@
 import React from 'react';
 import { FONT_THEMES, DEFAULT_MASTER_CLASS } from '../data/templates';
-import { Sparkles, MapPin, Users, CheckCircle, BookOpen, Clock, FileText, Image as ImageIcon } from 'lucide-react';
+import { Sparkles, MapPin, Users, CheckCircle, BookOpen, Clock, FileText } from 'lucide-react';
 
 export default function PreviewMasterClass({ 
   doc, 
   masterClassRef, 
   activePage, 
-  setActivePage,
-  onUpdateDisplayMode 
+  setActivePage 
 }) {
   const {
     clientName = 'BEIA Academy',
@@ -23,14 +22,11 @@ export default function PreviewMasterClass({
     practiceSection = {},
     customNote = '',
     fontTheme = 'cursive_signature',
-    displayMode = 'dynamic', // 'dynamic' (Live Editable Modules) | 'artistic' (Original Canva PNGs)
   } = doc;
 
   const activeFont = FONT_THEMES.find(t => t.id === fontTheme) || FONT_THEMES[0];
   const unifiedFamily = activeFont.fontFamily;
   const isCursive = activeFont.isCursive;
-
-  const isDynamic = displayMode !== 'artistic';
 
   const formatPrice = (price, curr = currency) => {
     const num = Number(price) || 0;
@@ -45,63 +41,11 @@ export default function PreviewMasterClass({
     { id: 'proposal', num: '5', title: 'Propuesta Comercial' },
   ];
 
-  // Helper Header Bar
-  const renderHeader = (titleText) => (
-    <div className="bg-[#5c5c5c] text-white px-6 sm:px-8 py-4 sm:py-5 flex items-center justify-between z-10 shrink-0 border-b border-stone-600 shadow-sm">
-      <h1
-        className="text-2xl sm:text-3xl text-white tracking-wide"
-        style={{
-          fontFamily: unifiedFamily,
-          fontWeight: isCursive ? 600 : 700,
-          textShadow: '0 1px 3px rgba(0,0,0,0.3)',
-        }}
-      >
-        {titleText}
-      </h1>
-      <div className="text-right" style={{ fontFamily: unifiedFamily }}>
-        <span className="text-xs uppercase tracking-widest text-stone-300 font-semibold block">
-          Master Class by Eliotte MUA
-        </span>
-        <span className="text-[11px] text-stone-400">
-          {clientName ? `Para: ${clientName}` : 'Formación Profesional'}
-        </span>
-      </div>
-    </div>
-  );
-
-  // Helper Footer Bar
-  const renderFooter = () => (
-    <div className="bg-[#5c5c5c] text-white px-6 sm:px-8 py-3 sm:py-4 flex items-center justify-between z-10 shrink-0 border-t border-stone-600">
-      {/* Left QR */}
-      <div className="bg-white p-1 rounded-sm shadow-sm shrink-0">
-        <img
-          src="./assets/qr_code.png"
-          alt="QR Code"
-          className="w-9 h-9 sm:w-11 sm:h-11 object-contain"
-        />
-      </div>
-
-      {/* Center Contact */}
-      <div className="text-center space-y-0.5 text-xs sm:text-sm text-stone-100" style={{ fontFamily: unifiedFamily }}>
-        <p className="tracking-widest font-semibold">{instagram}</p>
-        <p className="font-medium">{phone}</p>
-        <p className="text-[10px] sm:text-[11px] text-stone-300">{email}</p>
-      </div>
-
-      {/* Right QR */}
-      <div className="bg-white p-1 rounded-sm shadow-sm shrink-0">
-        <img
-          src="./assets/qr_code.png"
-          alt="QR Code"
-          className="w-9 h-9 sm:w-11 sm:h-11 object-contain"
-        />
-      </div>
-    </div>
-  );
+  const typewriterFont = "'Courier New', Courier, monospace";
 
   return (
     <div className="flex flex-col items-center p-0 sm:p-2 select-none w-full">
-      {/* ================= TOOLBAR (PAGES & DISPLAY MODE TOGGLE) ================= */}
+      {/* ================= PAGE SELECTOR TOOLBAR ================= */}
       <div className="no-print mb-4 w-full max-w-[760px] bg-white p-2 rounded-2xl shadow-sm border border-stone-200 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center space-x-1 overflow-x-auto py-1">
           {pages.map((p) => {
@@ -128,37 +72,9 @@ export default function PreviewMasterClass({
           })}
         </div>
 
-        {/* Dynamic Mode Switcher */}
-        {onUpdateDisplayMode && activePage !== 'cover' && activePage !== 'proposal' && (
-          <div className="flex items-center space-x-1 bg-stone-100 p-0.5 rounded-xl shrink-0 text-xs">
-            <button
-              type="button"
-              onClick={() => onUpdateDisplayMode('dynamic')}
-              className={`px-2 py-1 rounded-lg font-semibold flex items-center space-x-1 transition-all ${
-                isDynamic
-                  ? 'bg-amber-600 text-white shadow-2xs'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-              title="Temas editables en tiempo real"
-            >
-              <Sparkles className="w-3 h-3" />
-              <span>Dinámico</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => onUpdateDisplayMode('artistic')}
-              className={`px-2 py-1 rounded-lg font-semibold flex items-center space-x-1 transition-all ${
-                !isDynamic
-                  ? 'bg-stone-800 text-white shadow-2xs'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-              title="Plantilla fija original de Canva"
-            >
-              <ImageIcon className="w-3 h-3" />
-              <span>Canva Fijo</span>
-            </button>
-          </div>
-        )}
+        <div className="text-[11px] font-mono text-stone-500 px-2">
+          Página {pages.findIndex(p => p.id === activePage) + 1} de {pages.length}
+        </div>
       </div>
 
       {/* ================= PAGE 1: PORTADA OFICIAL ================= */}
@@ -175,7 +91,7 @@ export default function PreviewMasterClass({
           <img
             src="./assets/masterclass/Portada.png"
             alt="Portada Master Class by Eliotte MUA"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           />
 
           {clientName && (
@@ -193,372 +109,283 @@ export default function PreviewMasterClass({
 
       {/* ================= PAGE 2: PROGRAMA - MÓDULOS 1 & 2 ================= */}
       {activePage === 'page1' && (
-        !isDynamic ? (
+        <div
+          ref={masterClassRef}
+          id="masterclass-canvas-page1"
+          className="w-full max-w-[760px] bg-white shadow-2xl relative overflow-hidden text-stone-900 border border-stone-200"
+          style={{
+            aspectRatio: '1414 / 2000',
+            minHeight: '860px',
+          }}
+        >
+          {/* Authentic Canva High-Fashion Background with Model, Numbers 1 & 2, Cursive "Programa" */}
+          <img
+            src="./assets/masterclass/Indice de Temas.png"
+            alt="Master Class Programa 1"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          />
+
+          {/* Statement Quote Box Overlay (React Reactive) */}
           <div
-            ref={masterClassRef}
-            id="masterclass-canvas-page1"
-            className="w-full max-w-[760px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
+            className="absolute bg-[#5c5c5c] text-white p-3 sm:p-4 flex flex-col justify-between"
             style={{
-              aspectRatio: '1414 / 2000',
-              minHeight: '860px',
+              left: '37%',
+              top: '7.8%',
+              width: '58%',
+              minHeight: '17%',
+              maxHeight: '22%',
+              fontFamily: typewriterFont,
             }}
           >
-            <img
-              src="./assets/masterclass/Indice de Temas.png"
-              alt="Master Class Programa 1"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            <p className="text-[10px] sm:text-[11.5px] leading-relaxed italic text-stone-100">
+              "{syllabusQuote || DEFAULT_MASTER_CLASS.syllabusQuote}"
+            </p>
+            <p className="text-right font-bold text-[10px] sm:text-xs text-stone-200 mt-1">
+              — {instructor || 'Eliotte Casimiro'}
+            </p>
           </div>
-        ) : (
-          <div
-            ref={masterClassRef}
-            id="masterclass-canvas-page1"
-            className="w-full max-w-[760px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
-            style={{
-              aspectRatio: '1414 / 2000',
-              minHeight: '860px',
-              fontFamily: unifiedFamily
-            }}
-          >
-            {/* Subtle texture watermark */}
-            <div 
-              className="absolute inset-0 pointer-events-none opacity-[0.035] bg-repeat bg-center"
+
+          {/* Module 1 Reactive Overlay */}
+          {modules[0] && (
+            <div
+              className="absolute bg-white flex flex-col justify-start"
               style={{
-                backgroundImage: "radial-gradient(#222 1px, transparent 1px), radial-gradient(#222 1px, #fff 1px)",
-                backgroundSize: "24px 24px"
+                left: '33.5%',
+                top: '44.5%',
+                width: '61.5%',
+                minHeight: '19.5%',
+                fontFamily: typewriterFont,
               }}
-            />
-
-            {renderHeader('Índice de Temas')}
-
-            {/* Content Body */}
-            <div className="relative z-10 flex-1 px-6 sm:px-12 py-6 overflow-y-auto flex flex-col justify-between space-y-6">
-              {/* Top Quote Box + Editorial Photo */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-4 pb-4 border-b border-stone-200">
-                <div className="w-32 h-36 sm:w-40 sm:h-44 rounded-2xl overflow-hidden shadow-sm shrink-0 border border-stone-200">
-                  <img
-                    src="./assets/masterclass/mc_photo_mod1.jpg"
-                    alt="Eliotte MUA"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="bg-[#5c5c5c] text-white p-4 sm:p-5 rounded-2xl shadow-sm flex flex-col justify-between flex-1">
-                  <p className="text-xs sm:text-sm leading-relaxed italic text-stone-100">
-                    "{syllabusQuote || DEFAULT_MASTER_CLASS.syllabusQuote}"
-                  </p>
-                  <p className="text-right font-bold text-xs mt-2 text-stone-200">
-                    — {instructor || 'Eliotte Casimiro'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Module 1 */}
-              {modules[0] && (
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2.5">
-                    <span className="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs">
-                      {String(modules[0].number || 1).padStart(2, '0')}
-                    </span>
-                    <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-wide">
-                      {modules[0].title}
-                    </h3>
-                  </div>
-                  <ul className="pl-9 space-y-1 sm:space-y-1.5 text-xs sm:text-sm text-stone-800">
-                    {modules[0].topics?.map((topic, i) => (
-                      <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                        <span className="text-stone-900 font-bold shrink-0">•</span>
-                        <span>{topic}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Module 2 */}
-              {modules[1] && (
-                <div className="space-y-2 pt-2 border-t border-stone-100">
-                  <div className="flex items-center space-x-2.5">
-                    <span className="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs">
-                      {String(modules[1].number || 2).padStart(2, '0')}
-                    </span>
-                    <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-wide">
-                      {modules[1].title}
-                    </h3>
-                  </div>
-                  <ul className="pl-9 space-y-1 sm:space-y-1.5 text-xs sm:text-sm text-stone-800">
-                    {modules[1].topics?.map((topic, i) => (
-                      <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                        <span className="text-stone-900 font-bold shrink-0">•</span>
-                        <span>{topic}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+            >
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 tracking-tight mb-1.5 leading-snug">
+                {modules[0].number || 1}. {modules[0].title}
+              </h3>
+              <ul className="space-y-1 sm:space-y-1.5 text-[11px] sm:text-xs text-stone-900 pl-1 leading-snug">
+                {modules[0].topics?.map((topic, i) => (
+                  <li key={i} className="flex items-start space-x-1.5">
+                    <span className="font-bold shrink-0">•</span>
+                    <span>{topic}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
+          )}
 
-            {renderFooter()}
-          </div>
-        )
+          {/* Module 2 Reactive Overlay */}
+          {modules[1] && (
+            <div
+              className="absolute bg-white flex flex-col justify-start"
+              style={{
+                left: '5.5%',
+                top: '68.5%',
+                width: '58%',
+                minHeight: '21%',
+                fontFamily: typewriterFont,
+              }}
+            >
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 tracking-tight mb-1.5 leading-snug">
+                {modules[1].number || 2}. {modules[1].title}
+              </h3>
+              <ul className="space-y-1 sm:space-y-1.5 text-[11px] sm:text-xs text-stone-900 pl-1 leading-snug">
+                {modules[1].topics?.map((topic, i) => (
+                  <li key={i} className="flex items-start space-x-1.5">
+                    <span className="font-bold shrink-0">•</span>
+                    <span>{topic}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       )}
 
       {/* ================= PAGE 3: PROGRAMA - MÓDULOS 3, 4 & 5 ================= */}
       {activePage === 'page2' && (
-        !isDynamic ? (
-          <div
-            ref={masterClassRef}
-            id="masterclass-canvas-page2"
-            className="w-full max-w-[760px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
-            style={{
-              aspectRatio: '1414 / 2000',
-              minHeight: '860px',
-            }}
-          >
-            <img
-              src="./assets/masterclass/Indice de Temas (2).png"
-              alt="Master Class Programa 2"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-          </div>
-        ) : (
-          <div
-            ref={masterClassRef}
-            id="masterclass-canvas-page2"
-            className="w-full max-w-[760px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
-            style={{
-              aspectRatio: '1414 / 2000',
-              minHeight: '860px',
-              fontFamily: unifiedFamily
-            }}
-          >
-            {/* Subtle texture watermark */}
-            <div 
-              className="absolute inset-0 pointer-events-none opacity-[0.035] bg-repeat bg-center"
+        <div
+          ref={masterClassRef}
+          id="masterclass-canvas-page2"
+          className="w-full max-w-[760px] bg-white shadow-2xl relative overflow-hidden text-stone-900 border border-stone-200"
+          style={{
+            aspectRatio: '1414 / 2000',
+            minHeight: '860px',
+          }}
+        >
+          {/* Authentic Canva High-Fashion Page 2 Background with Photos & Gradient Numbers */}
+          <img
+            src="./assets/masterclass/Indice de Temas (2).png"
+            alt="Master Class Programa 2"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          />
+
+          {/* Module 3 Reactive Overlay */}
+          {modules[2] && (
+            <div
+              className="absolute bg-white flex flex-col justify-start"
               style={{
-                backgroundImage: "radial-gradient(#222 1px, transparent 1px), radial-gradient(#222 1px, #fff 1px)",
-                backgroundSize: "24px 24px"
+                left: '34%',
+                top: '10.5%',
+                width: '61%',
+                minHeight: '26%',
+                fontFamily: typewriterFont,
               }}
-            />
-
-            {renderHeader('Índice de Temas')}
-
-            {/* Content Body */}
-            <div className="relative z-10 flex-1 px-6 sm:px-12 py-5 overflow-y-auto flex flex-col justify-between space-y-4">
-              {/* Module 3 with Right Photo */}
-              {modules[2] && (
-                <div className="flex flex-col sm:flex-row items-start justify-between gap-4 pb-3 border-b border-stone-200">
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs">
-                        {String(modules[2].number || 3).padStart(2, '0')}
-                      </span>
-                      <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-wide">
-                        {modules[2].title}
-                      </h3>
-                    </div>
-                    <ul className="pl-9 space-y-1 sm:space-y-1.5 text-xs sm:text-sm text-stone-800">
-                      {modules[2].topics?.map((topic, i) => (
-                        <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                          <span className="text-stone-900 font-bold shrink-0">•</span>
-                          <span>{topic}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="w-24 h-32 sm:w-28 sm:h-36 rounded-2xl overflow-hidden shadow-sm shrink-0 border border-stone-200 self-center sm:self-start">
-                    <img src="./assets/masterclass/mc_photo_mod3.jpg" alt="Editorial Makeup" className="w-full h-full object-cover" />
-                  </div>
-                </div>
-              )}
-
-              {/* Module 4 with Left Photo */}
-              {modules[3] && (
-                <div className="flex flex-col sm:flex-row items-start justify-between gap-4 pb-3 border-b border-stone-200">
-                  <div className="w-24 h-32 sm:w-28 sm:h-36 rounded-2xl overflow-hidden shadow-sm shrink-0 border border-stone-200 hidden sm:block">
-                    <img src="./assets/masterclass/mc_photo_mod4.jpg" alt="Visagismo" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs">
-                        {String(modules[3].number || 4).padStart(2, '0')}
-                      </span>
-                      <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-wide">
-                        {modules[3].title}
-                      </h3>
-                    </div>
-                    <ul className="pl-9 space-y-1 sm:space-y-1.5 text-xs sm:text-sm text-stone-800">
-                      {modules[3].topics?.map((topic, i) => (
-                        <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                          <span className="text-stone-900 font-bold shrink-0">•</span>
-                          <span>{topic}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {/* Module 5 */}
-              {modules[4] && (
-                <div className="space-y-2 pt-1">
-                  <div className="flex items-center space-x-2.5">
-                    <span className="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs">
-                      {String(modules[4].number || 5).padStart(2, '0')}
-                    </span>
-                    <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-wide">
-                      {modules[4].title}
-                    </h3>
-                  </div>
-                  <ul className="pl-9 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs sm:text-sm text-stone-800">
-                    {modules[4].topics?.map((topic, i) => (
-                      <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                        <span className="text-stone-900 font-bold shrink-0">•</span>
-                        <span>{topic}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+            >
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 tracking-tight mb-1.5 leading-snug">
+                {modules[2].number || 3}. {modules[2].title}
+              </h3>
+              <ul className="space-y-1 sm:space-y-1.5 text-[11px] sm:text-xs text-stone-900 pl-1 leading-snug">
+                {modules[2].topics?.map((topic, i) => (
+                  <li key={i} className="flex items-start space-x-1.5">
+                    <span className="font-bold shrink-0">•</span>
+                    <span>{topic}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
+          )}
 
-            {renderFooter()}
-          </div>
-        )
+          {/* Module 4 Reactive Overlay */}
+          {modules[3] && (
+            <div
+              className="absolute bg-white flex flex-col justify-start"
+              style={{
+                left: '6.5%',
+                top: '42.5%',
+                width: '58%',
+                minHeight: '27%',
+                fontFamily: typewriterFont,
+              }}
+            >
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 tracking-tight mb-1.5 leading-snug">
+                {modules[3].number || 4}. {modules[3].title}
+              </h3>
+              <ul className="space-y-1 sm:space-y-1.5 text-[11px] sm:text-xs text-stone-900 pl-1 leading-snug">
+                {modules[3].topics?.map((topic, i) => (
+                  <li key={i} className="flex items-start space-x-1.5">
+                    <span className="font-bold shrink-0">•</span>
+                    <span>{topic}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Module 5 Reactive Overlay */}
+          {modules[4] && (
+            <div
+              className="absolute bg-white flex flex-col justify-start"
+              style={{
+                left: '33%',
+                top: '69.5%',
+                width: '58%',
+                minHeight: '23%',
+                fontFamily: typewriterFont,
+              }}
+            >
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 tracking-tight mb-1.5 leading-snug">
+                {modules[4].number || 5}. {modules[4].title}
+              </h3>
+              <ul className="space-y-1 sm:space-y-1.5 text-[11px] sm:text-xs text-stone-900 pl-1 leading-snug">
+                {modules[4].topics?.map((topic, i) => (
+                  <li key={i} className="flex items-start space-x-1.5">
+                    <span className="font-bold shrink-0">•</span>
+                    <span>{topic}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       )}
 
       {/* ================= PAGE 4: PROGRAMA - MÓDULOS 6 & 7 + PRÁCTICA ================= */}
       {activePage === 'page3' && (
-        !isDynamic ? (
-          <div
-            ref={masterClassRef}
-            id="masterclass-canvas-page3"
-            className="w-full max-w-[760px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
-            style={{
-              aspectRatio: '1414 / 2000',
-              minHeight: '860px',
-            }}
-          >
-            <img
-              src="./assets/masterclass/Indice de Temas (3).png"
-              alt="Master Class Programa 3"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-          </div>
-        ) : (
-          <div
-            ref={masterClassRef}
-            id="masterclass-canvas-page3"
-            className="w-full max-w-[760px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
-            style={{
-              aspectRatio: '1414 / 2000',
-              minHeight: '860px',
-              fontFamily: unifiedFamily
-            }}
-          >
-            {/* Subtle texture watermark */}
-            <div 
-              className="absolute inset-0 pointer-events-none opacity-[0.035] bg-repeat bg-center"
+        <div
+          ref={masterClassRef}
+          id="masterclass-canvas-page3"
+          className="w-full max-w-[760px] bg-white shadow-2xl relative overflow-hidden text-stone-900 border border-stone-200"
+          style={{
+            aspectRatio: '1414 / 2000',
+            minHeight: '860px',
+          }}
+        >
+          {/* Authentic Canva High-Fashion Page 3 Background with Photos & Practice Box */}
+          <img
+            src="./assets/masterclass/Indice de Temas (3).png"
+            alt="Master Class Programa 3"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          />
+
+          {/* Module 6 Reactive Overlay */}
+          {modules[5] && (
+            <div
+              className="absolute bg-white flex flex-col justify-start"
               style={{
-                backgroundImage: "radial-gradient(#222 1px, transparent 1px), radial-gradient(#222 1px, #fff 1px)",
-                backgroundSize: "24px 24px"
+                left: '34%',
+                top: '12.8%',
+                width: '58%',
+                minHeight: '16%',
+                fontFamily: typewriterFont,
               }}
-            />
-
-            {renderHeader('Índice de Temas')}
-
-            {/* Content Body */}
-            <div className="relative z-10 flex-1 px-6 sm:px-12 py-5 overflow-y-auto flex flex-col justify-between space-y-4">
-              {/* Module 6 with Photo */}
-              {modules[5] && (
-                <div className="flex flex-col sm:flex-row items-start justify-between gap-4 pb-3 border-b border-stone-200">
-                  <div className="w-24 h-28 sm:w-28 sm:h-32 rounded-2xl overflow-hidden shadow-sm shrink-0 border border-stone-200 hidden sm:block">
-                    <img src="./assets/masterclass/mc_photo_mod6.jpg" alt="Labios" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs">
-                        {String(modules[5].number || 6).padStart(2, '0')}
-                      </span>
-                      <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-wide">
-                        {modules[5].title}
-                      </h3>
-                    </div>
-                    <ul className="pl-9 space-y-1 sm:space-y-1.5 text-xs sm:text-sm text-stone-800">
-                      {modules[5].topics?.map((topic, i) => (
-                        <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                          <span className="text-stone-900 font-bold shrink-0">•</span>
-                          <span>{topic}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {/* Module 7 with Photo */}
-              {modules[6] && (
-                <div className="flex flex-col sm:flex-row items-start justify-between gap-4 pb-3 border-b border-stone-200">
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs">
-                        {String(modules[6].number || 7).padStart(2, '0')}
-                      </span>
-                      <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-wide">
-                        {modules[6].title}
-                      </h3>
-                    </div>
-                    <ul className="pl-9 space-y-1 sm:space-y-1.5 text-xs sm:text-sm text-stone-800">
-                      {modules[6].topics?.map((topic, i) => (
-                        <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                          <span className="text-stone-900 font-bold shrink-0">•</span>
-                          <span>{topic}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="w-24 h-28 sm:w-28 sm:h-32 rounded-2xl overflow-hidden shadow-sm shrink-0 border border-stone-200 self-center sm:self-start">
-                    <img src="./assets/masterclass/mc_photo_mod7.jpg" alt="Iluminación" className="w-full h-full object-cover" />
-                  </div>
-                </div>
-              )}
-
-              {/* Any additional modules (8+) if added */}
-              {modules.slice(7).map((extraMod, extraIdx) => (
-                <div key={extraIdx} className="space-y-2 pt-2 border-t border-stone-200">
-                  <div className="flex items-center space-x-2.5">
-                    <span className="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs">
-                      {String(extraMod.number || extraIdx + 8).padStart(2, '0')}
-                    </span>
-                    <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-wide">
-                      {extraMod.title}
-                    </h3>
-                  </div>
-                  <ul className="pl-9 space-y-1 text-xs sm:text-sm text-stone-800">
-                    {extraMod.topics?.map((topic, i) => (
-                      <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                        <span className="text-stone-900 font-bold shrink-0">•</span>
-                        <span>{topic}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-
-              {/* Práctica con Modelo Box */}
-              <div className="bg-[#5c5c5c] text-white p-4 sm:p-5 rounded-2xl shadow-sm space-y-1.5">
-                <h4 className="font-bold text-sm sm:text-base tracking-wide flex items-center space-x-2 text-white">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
-                  <span>{practiceSection?.title || 'Práctica con Modelo'}</span>
-                </h4>
-                <p className="text-xs sm:text-[13px] text-stone-200 leading-relaxed italic">
-                  {practiceSection?.text || DEFAULT_MASTER_CLASS.practiceSection.text}
-                </p>
-              </div>
+            >
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 tracking-tight mb-1.5 leading-snug">
+                {modules[5].number || 6}. {modules[5].title}
+              </h3>
+              <ul className="space-y-1 sm:space-y-1.5 text-[11px] sm:text-xs text-stone-900 pl-1 leading-snug">
+                {modules[5].topics?.map((topic, i) => (
+                  <li key={i} className="flex items-start space-x-1.5">
+                    <span className="font-bold shrink-0">•</span>
+                    <span>{topic}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
+          )}
 
-            {renderFooter()}
+          {/* Module 7 Reactive Overlay */}
+          {modules[6] && (
+            <div
+              className="absolute bg-white flex flex-col justify-start"
+              style={{
+                left: '6.5%',
+                top: '38.5%',
+                width: '56%',
+                minHeight: '22%',
+                fontFamily: typewriterFont,
+              }}
+            >
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 tracking-tight mb-1.5 leading-snug">
+                {modules[6].number || 7}. {modules[6].title}
+              </h3>
+              <ul className="space-y-1 sm:space-y-1.5 text-[11px] sm:text-xs text-stone-900 pl-1 leading-snug">
+                {modules[6].topics?.map((topic, i) => (
+                  <li key={i} className="flex items-start space-x-1.5">
+                    <span className="font-bold shrink-0">•</span>
+                    <span>{topic}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Práctica con Modelo Reactive Overlay (over the dark gray box) */}
+          <div
+            className="absolute bg-[#5c5c5c] text-white p-3.5 sm:p-5 flex flex-col justify-start space-y-1.5 overflow-hidden"
+            style={{
+              left: '28.3%',
+              top: '65.8%',
+              width: '66.8%',
+              minHeight: '24%',
+              fontFamily: typewriterFont,
+            }}
+          >
+            <h4 className="font-bold text-xs sm:text-sm tracking-wide text-white uppercase">
+              {practiceSection?.title || 'Práctica con Modelo'}
+            </h4>
+            <p className="text-[10px] sm:text-[11.5px] text-stone-100 leading-relaxed italic">
+              {practiceSection?.text || DEFAULT_MASTER_CLASS.practiceSection.text}
+            </p>
           </div>
-        )
+        </div>
       )}
 
       {/* ================= PAGE 5: PROPUESTA COMERCIAL PERSONALIZADA ================= */}
@@ -582,7 +409,27 @@ export default function PreviewMasterClass({
             }}
           />
 
-          {renderHeader('Propuesta Comercial')}
+          {/* Top Header Bar */}
+          <div className="bg-[#5c5c5c] text-white px-6 sm:px-8 py-4 sm:py-5 flex items-center justify-between z-10 shrink-0 border-b border-stone-600 shadow-sm">
+            <h1
+              className="text-2xl sm:text-3xl text-white tracking-wide"
+              style={{
+                fontFamily: unifiedFamily,
+                fontWeight: isCursive ? 600 : 700,
+                textShadow: '0 1px 3px rgba(0,0,0,0.3)',
+              }}
+            >
+              Propuesta Comercial
+            </h1>
+            <div className="text-right" style={{ fontFamily: unifiedFamily }}>
+              <span className="text-xs uppercase tracking-widest text-stone-300 font-semibold block">
+                Master Class by Eliotte MUA
+              </span>
+              <span className="text-[11px] text-stone-400">
+                {clientName ? `Para: ${clientName}` : 'Formación Profesional'}
+              </span>
+            </div>
+          </div>
 
           {/* Body with Locations & Packages */}
           <div
@@ -642,7 +489,33 @@ export default function PreviewMasterClass({
             )}
           </div>
 
-          {renderFooter()}
+          {/* Bottom Footer Bar */}
+          <div className="bg-[#5c5c5c] text-white px-6 sm:px-8 py-3 sm:py-4 flex items-center justify-between z-10 shrink-0 border-t border-stone-600">
+            {/* Left QR */}
+            <div className="bg-white p-1 rounded-sm shadow-sm shrink-0">
+              <img
+                src="./assets/qr_code.png"
+                alt="QR Code"
+                className="w-9 h-9 sm:w-11 sm:h-11 object-contain"
+              />
+            </div>
+
+            {/* Center Contact */}
+            <div className="text-center space-y-0.5 text-xs sm:text-sm text-stone-100" style={{ fontFamily: unifiedFamily }}>
+              <p className="tracking-widest font-semibold">{instagram}</p>
+              <p className="font-medium">{phone}</p>
+              <p className="text-[10px] sm:text-[11px] text-stone-300">{email}</p>
+            </div>
+
+            {/* Right QR */}
+            <div className="bg-white p-1 rounded-sm shadow-sm shrink-0">
+              <img
+                src="./assets/qr_code.png"
+                alt="QR Code"
+                className="w-9 h-9 sm:w-11 sm:h-11 object-contain"
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
