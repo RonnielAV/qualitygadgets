@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ZoomIn, ZoomOut, Maximize2, Move, Smartphone, Monitor } from 'lucide-react';
 
-export default function DocumentCanvasViewer({ children, docType }) {
+export default function DocumentCanvasViewer({ children, docType, mobileView }) {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
-  const [containerWidth, setContainerWidth] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(() => {
+    return typeof window !== 'undefined' ? window.innerWidth : 750;
+  });
   const [zoomMode, setZoomMode] = useState('fit'); // 'fit' | 'actual' | 'custom'
   const [customZoom, setCustomZoom] = useState(1);
-  const [measuredHeight, setMeasuredHeight] = useState(1050);
+  const [measuredHeight, setMeasuredHeight] = useState(1060);
 
   // Reference base width for high-fidelity A4 layout
   const BASE_WIDTH = 750;
@@ -18,8 +20,15 @@ export default function DocumentCanvasViewer({ children, docType }) {
     const updateDimensions = () => {
       if (containerRef.current) {
         const width = containerRef.current.clientWidth;
-        setContainerWidth(width);
+        if (width > 0) {
+          setContainerWidth(width);
+        } else if (typeof window !== 'undefined') {
+          setContainerWidth(window.innerWidth);
+        }
+      } else if (typeof window !== 'undefined') {
+        setContainerWidth(window.innerWidth);
       }
+
       if (contentRef.current) {
         const h = contentRef.current.scrollHeight || contentRef.current.offsetHeight;
         if (h > 500) {
@@ -29,8 +38,8 @@ export default function DocumentCanvasViewer({ children, docType }) {
     };
 
     updateDimensions();
-    // Re-check after images/fonts load
-    const timer = setTimeout(updateDimensions, 400);
+    const timer1 = setTimeout(updateDimensions, 50);
+    const timer2 = setTimeout(updateDimensions, 300);
 
     const observer = new ResizeObserver(() => {
       updateDimensions();
@@ -45,16 +54,21 @@ export default function DocumentCanvasViewer({ children, docType }) {
 
     window.addEventListener('resize', updateDimensions);
     return () => {
-      clearTimeout(timer);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
       observer.disconnect();
       window.removeEventListener('resize', updateDimensions);
     };
-  }, [docType]);
+  }, [docType, mobileView, children]);
 
-  // Calculate fit-to-screen scale factor
-  const isMobileOrTablet = containerWidth > 0 && containerWidth < (BASE_WIDTH + 32);
-  const padding = containerWidth < 450 ? 8 : 24;
-  const availableWidth = Math.max(260, containerWidth - padding);
+  // Calculate fit-to-screen scale factor reliably
+  const effectiveWidth = containerWidth > 0 
+    ? containerWidth 
+    : (typeof window !== 'undefined' ? window.innerWidth : BASE_WIDTH);
+
+  const isMobileOrTablet = effectiveWidth < (BASE_WIDTH + 32);
+  const padding = effectiveWidth < 450 ? 12 : 24;
+  const availableWidth = Math.max(260, effectiveWidth - padding);
   const fitScale = isMobileOrTablet ? Math.min(1, availableWidth / BASE_WIDTH) : 1;
 
   // Active scale

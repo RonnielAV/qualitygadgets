@@ -58,9 +58,7 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
           width: '750px',
           minWidth: '750px',
           maxWidth: '750px',
-          height: '1060px',
           minHeight: '1060px',
-          maxHeight: '1060px',
           boxSizing: 'border-box',
           fontFamily: unifiedFamily,
           letterSpacing: letterSpacing,
@@ -169,7 +167,7 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
           </table>
 
           {/* ================= TOTALS & SUMMARY WITH UNIFIED FONT ================= */}
-          <div className="mt-6 pt-4 border-t-2 border-stone-300 flex flex-col sm:flex-row justify-between items-start gap-6">
+          <div className="mt-6 pt-4 border-t-2 border-stone-300 flex flex-row justify-between items-start gap-6">
             {/* Payment & Bank Information */}
             <div className="text-xs text-stone-600 max-w-sm space-y-1" style={{ fontFamily: unifiedFamily }}>
               <p className="font-bold text-stone-900 uppercase tracking-wider">
@@ -195,7 +193,7 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
             </div>
 
             {/* Calculations Box with Unified Font */}
-            <div className="w-full sm:w-64 space-y-2 text-xs sm:text-sm" style={{ fontFamily: unifiedFamily }}>
+            <div className="w-64 space-y-2 text-xs sm:text-sm" style={{ fontFamily: unifiedFamily }}>
               <div className="flex justify-between py-1 border-b border-stone-200 text-stone-700">
                 <span>Subtotal:</span>
                 <span className="font-semibold">{formatCurrency(subtotal)}</span>
@@ -215,8 +213,8 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
         </div>
 
         {/* ================= BOTTOM FOOTER WITH UNIFIED FONT ================= */}
-        <div className="bg-stone-900 text-stone-200 px-8 py-3.5 flex flex-col sm:flex-row items-center justify-between text-xs tracking-wide shrink-0" style={{ fontFamily: unifiedFamily }}>
-          <div className="flex items-center space-x-3 mb-1 sm:mb-0">
+        <div className="bg-stone-900 text-stone-200 px-8 py-3.5 flex flex-row items-center justify-between text-xs tracking-wide shrink-0" style={{ fontFamily: unifiedFamily }}>
+          <div className="flex items-center space-x-3">
             <span className="font-medium text-white">(849) 220-9464</span>
             <span className="text-stone-500">•</span>
             <span className="font-medium text-stone-300">eliottecasimiro129@gmail.com</span>

@@ -659,7 +659,7 @@ export default function App() {
         {/* Right Column: Live High-Fidelity Canvas Preview */}
         <div className={`lg:col-span-7 xl:col-span-7 flex flex-col items-center justify-start overflow-x-auto w-full ${mobileView === 'preview' ? 'block' : 'hidden lg:block'}`}>
           <div className="w-full flex flex-col items-center">
-            <DocumentCanvasViewer docType={docType}>
+            <DocumentCanvasViewer docType={docType} mobileView={mobileView}>
               {docType === 'quote' && (
                 <PreviewQuote doc={quoteDoc} quoteRef={quoteRef} />
               )}

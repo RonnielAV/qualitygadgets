@@ -70,9 +70,7 @@ export default function PreviewQuote({ doc, quoteRef }) {
           width: '750px',
           minWidth: '750px',
           maxWidth: '750px',
-          height: '1060px',
           minHeight: '1060px',
-          maxHeight: '1060px',
           boxSizing: 'border-box',
           fontFamily: unifiedFamily, // Apply unified typography across the entire document root
         }}
