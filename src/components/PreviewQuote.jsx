@@ -60,15 +60,20 @@ export default function PreviewQuote({ doc, quoteRef }) {
   };
 
   return (
-    <div className="flex justify-center p-0 sm:p-2 select-none w-full">
+    <div className="flex justify-center p-0 select-none w-full">
       {/* A4 Proportion Container: 1414 x 2000 ratio (1 : 1.4144) matching original Canva arts */}
       <div
         ref={quoteRef}
         id="quote-document-canvas"
-        className="w-full max-w-[750px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-300"
+        className="bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-300"
         style={{
-          aspectRatio: '1414 / 2000',
-          minHeight: '880px',
+          width: '750px',
+          minWidth: '750px',
+          maxWidth: '750px',
+          height: '1060px',
+          minHeight: '1060px',
+          maxHeight: '1060px',
+          boxSizing: 'border-box',
           fontFamily: unifiedFamily, // Apply unified typography across the entire document root
         }}
       >
@@ -244,50 +249,50 @@ export default function PreviewQuote({ doc, quoteRef }) {
 
           {/* ================= BOTTOM CLIENT INFORMATION (NO TRUNCATION, FULL VISIBILITY) ================= */}
           <div 
-            className="relative z-10 w-full px-6 sm:px-10 pb-3 pt-2 text-stone-900 bg-gradient-to-t from-white/85 via-white/45 to-transparent"
+            className="relative z-10 w-full px-8 pb-3 pt-2 text-stone-900 bg-gradient-to-t from-white/90 via-white/50 to-transparent"
             style={{ fontFamily: unifiedFamily }}
           >
             {/* Header of client section with Cotización para + N° Cotización */}
-            <div className="flex items-center justify-between mb-1.5">
-              <p className={`italic text-stone-900 ${isCursive ? 'text-lg sm:text-xl font-bold' : 'text-xs sm:text-sm font-semibold'}`}>
+            <div className="flex items-center justify-between mb-2">
+              <p className={`italic text-stone-900 leading-normal ${isCursive ? 'text-xl font-bold' : 'text-sm font-semibold'}`}>
                 Cotización para:
               </p>
               {quoteNumber && (
-                <span className={`text-stone-900 font-bold tracking-wider ${isCursive ? 'text-lg sm:text-xl' : 'text-xs sm:text-sm'}`}>
+                <span className={`text-stone-900 font-bold tracking-wider leading-normal ${isCursive ? 'text-xl' : 'text-sm'}`}>
                   N°: {quoteNumber}
                 </span>
               )}
             </div>
 
-            <div className="space-y-1.5 sm:space-y-2">
+            <div className="space-y-2">
               {/* Row 1: Cliente & RNC (Full width available, NO TRUNCATION EVER) */}
-              <div className="flex flex-wrap items-baseline border-b border-stone-700/80 pb-0.5 w-full">
-                <span className={`text-stone-950 mr-2 shrink-0 ${isCursive ? 'text-lg sm:text-xl font-bold' : 'text-xs sm:text-sm font-semibold'}`}>
+              <div className="flex items-baseline border-b border-stone-700/80 pb-1 w-full">
+                <span className={`text-stone-950 mr-2 shrink-0 leading-normal ${isCursive ? 'text-xl font-bold' : 'text-sm font-semibold'}`}>
                   Cliente:
                 </span>
-                <span className={`flex-1 text-stone-950 break-words leading-tight ${isCursive ? 'text-lg sm:text-xl font-semibold' : 'text-xs sm:text-sm font-medium'}`}>
+                <span className={`flex-1 text-stone-950 break-words leading-normal ${isCursive ? 'text-xl font-semibold' : 'text-sm font-medium'}`}>
                   {clientName || ''}
                   {company && company !== clientName ? ` • ${company}` : ''}
                   {rnc ? ` • RNC: ${rnc}` : ''}
                 </span>
               </div>
 
-              {/* Row 2: Fecha de evento & Correo (Flexible, No truncation) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5">
-                <div className="flex items-baseline border-b border-stone-700/80 pb-0.5">
-                  <span className={`text-stone-950 mr-2 shrink-0 ${isCursive ? 'text-lg sm:text-xl font-bold' : 'text-xs sm:text-sm font-semibold'}`}>
+              {/* Row 2: Fecha de evento & Correo (Fixed 2 Columns - Never Overlaps) */}
+              <div className="grid grid-cols-2 gap-x-8">
+                <div className="flex items-baseline border-b border-stone-700/80 pb-1">
+                  <span className={`text-stone-950 mr-2 shrink-0 leading-normal ${isCursive ? 'text-xl font-bold' : 'text-sm font-semibold'}`}>
                     Fecha de evento:
                   </span>
-                  <span className={`flex-1 text-stone-950 break-words leading-tight ${isCursive ? 'text-lg sm:text-xl font-semibold' : 'text-xs sm:text-sm font-medium'}`}>
+                  <span className={`flex-1 text-stone-950 break-words leading-normal ${isCursive ? 'text-xl font-semibold' : 'text-sm font-medium'}`}>
                     {eventDate || ''}
                   </span>
                 </div>
 
-                <div className="flex items-baseline border-b border-stone-700/80 pb-0.5">
-                  <span className={`text-stone-950 mr-2 shrink-0 ${isCursive ? 'text-lg sm:text-xl font-bold' : 'text-xs sm:text-sm font-semibold'}`}>
+                <div className="flex items-baseline border-b border-stone-700/80 pb-1">
+                  <span className={`text-stone-950 mr-2 shrink-0 leading-normal ${isCursive ? 'text-xl font-bold' : 'text-sm font-semibold'}`}>
                     Correo:
                   </span>
-                  <span className={`flex-1 text-stone-950 break-words leading-tight ${isCursive ? 'text-lg sm:text-xl font-semibold' : 'text-xs sm:text-sm font-medium'}`}>
+                  <span className={`flex-1 text-stone-950 break-words leading-normal ${isCursive ? 'text-xl font-semibold' : 'text-sm font-medium'}`}>
                     {clientEmail || ''}
                   </span>
                 </div>
@@ -295,11 +300,11 @@ export default function PreviewQuote({ doc, quoteRef }) {
 
               {/* Row 3 (Optional): Teléfono if present */}
               {clientPhone && (
-                <div className="flex items-baseline border-b border-stone-700/80 pb-0.5 max-w-sm">
-                  <span className={`text-stone-950 mr-2 shrink-0 ${isCursive ? 'text-lg sm:text-xl font-bold' : 'text-xs sm:text-sm font-semibold'}`}>
+                <div className="flex items-baseline border-b border-stone-700/80 pb-1 max-w-sm">
+                  <span className={`text-stone-950 mr-2 shrink-0 leading-normal ${isCursive ? 'text-xl font-bold' : 'text-sm font-semibold'}`}>
                     Teléfono:
                   </span>
-                  <span className={`flex-1 text-stone-950 break-words leading-tight ${isCursive ? 'text-lg sm:text-xl font-semibold' : 'text-xs sm:text-sm font-medium'}`}>
+                  <span className={`flex-1 text-stone-950 break-words leading-normal ${isCursive ? 'text-xl font-semibold' : 'text-sm font-medium'}`}>
                     {clientPhone}
                   </span>
                 </div>
@@ -309,13 +314,13 @@ export default function PreviewQuote({ doc, quoteRef }) {
         </div>
 
         {/* ================= BOTTOM FOOTER (CHARCOAL BANNER) WITH UNIFIED FONT ================= */}
-        <div className="bg-[#525558] text-white px-6 sm:px-8 py-2.5 sm:py-3 flex items-center justify-between z-20 shrink-0 border-t border-stone-600/60 shadow-sm">
+        <div className="bg-[#525558] text-white px-8 py-3 flex items-center justify-between z-20 shrink-0 border-t border-stone-600/60 shadow-sm">
           {/* Contact Details with Unified Font */}
-          <div className="text-left space-y-0.5" style={{ fontFamily: unifiedFamily }}>
-            <p className="text-[12px] sm:text-sm md:text-base font-light tracking-wide text-stone-100">
+          <div className="text-left space-y-1" style={{ fontFamily: unifiedFamily }}>
+            <p className="text-sm font-light tracking-wide text-stone-100 leading-normal">
               (849) 220-9464 &nbsp;|&nbsp; eliottecasimiro129@gmail.com
             </p>
-            <p className="text-[12px] sm:text-sm md:text-base font-semibold tracking-widest text-white">
+            <p className="text-sm font-semibold tracking-widest text-white leading-normal">
               @ELIOTTEMUA
             </p>
           </div>
@@ -326,7 +331,7 @@ export default function PreviewQuote({ doc, quoteRef }) {
               <img
                 src="./assets/qr_code.png"
                 alt="QR Eliotte MUA"
-                className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                className="w-12 h-12 object-contain"
               />
             </div>
           )}

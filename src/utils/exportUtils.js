@@ -9,12 +9,22 @@ export async function downloadElementAsImage(element, filename = 'Eliotte-MUA-Do
   if (!element) return;
   
   try {
+    const targetWidth = element.offsetWidth || 750;
+    const targetHeight = element.offsetHeight || 1060;
+
     const options = {
       quality: 0.98,
       pixelRatio: 2.5, // Retina quality
       backgroundColor: '#ffffff',
       cacheBust: true,
       skipFonts: false,
+      width: targetWidth,
+      height: targetHeight,
+      style: {
+        transform: 'none',
+        transformOrigin: 'top left',
+        margin: '0',
+      }
     };
 
     let dataUrl;
@@ -36,7 +46,18 @@ export async function downloadElementAsImage(element, filename = 'Eliotte-MUA-Do
     
     // Fallback using toCanvas
     try {
-      const canvas = await toCanvas(element, { pixelRatio: 2.0, backgroundColor: '#ffffff' });
+      const targetWidth = element.offsetWidth || 750;
+      const targetHeight = element.offsetHeight || 1060;
+      const canvas = await toCanvas(element, { 
+        pixelRatio: 2.0, 
+        backgroundColor: '#ffffff',
+        width: targetWidth,
+        height: targetHeight,
+        style: {
+          transform: 'none',
+          transformOrigin: 'top left',
+        }
+      });
       const mime = format === 'jpg' || format === 'jpeg' ? 'image/jpeg' : 'image/png';
       const fallbackUrl = canvas.toDataURL(mime, 0.95);
       const link = document.createElement('a');
@@ -60,19 +81,25 @@ export async function downloadElementAsPdf(element, filename = 'Eliotte-MUA-Docu
   if (!element) return;
   
   try {
+    const targetWidth = element.offsetWidth || 750;
+    const targetHeight = element.offsetHeight || 1060;
+
     const options = {
       quality: 0.98,
       pixelRatio: 2.5,
       backgroundColor: '#ffffff',
       cacheBust: true,
+      skipFonts: false,
+      width: targetWidth,
+      height: targetHeight,
+      style: {
+        transform: 'none',
+        transformOrigin: 'top left',
+        margin: '0',
+      }
     };
 
     const imgData = await toJpeg(element, options);
-
-    // Compute element dimensions
-    const widthPx = element.offsetWidth || 1414;
-    const heightPx = element.offsetHeight || 2000;
-    const ratio = heightPx / widthPx;
 
     // Standard A4 dimensions in mm: 210 x 297
     const pdf = new jsPDF({
@@ -85,18 +112,8 @@ export async function downloadElementAsPdf(element, filename = 'Eliotte-MUA-Docu
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
     
-    const imgWidth = pdfWidth;
-    const imgHeight = pdfWidth * ratio;
-
-    if (imgHeight <= pdfHeight) {
-      const yOffset = (pdfHeight - imgHeight) / 2;
-      pdf.addImage(imgData, 'JPEG', 0, yOffset, imgWidth, imgHeight, undefined, 'FAST');
-    } else {
-      const scale = pdfHeight / imgHeight;
-      const fitW = imgWidth * scale;
-      const xOffset = (pdfWidth - fitW) / 2;
-      pdf.addImage(imgData, 'JPEG', xOffset, 0, fitW, pdfHeight, undefined, 'FAST');
-    }
+    // Fit full A4 page seamlessly
+    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
 
     pdf.save(`${filename}.pdf`);
     return true;

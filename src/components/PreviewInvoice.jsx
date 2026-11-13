@@ -48,27 +48,32 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
   const logoSrc = getLogoSrc(logoVariant);
 
   return (
-    <div className="flex justify-center p-0 sm:p-2 select-none w-full">
+    <div className="flex justify-center p-0 select-none w-full">
       {/* A4 Container */}
       <div
         ref={invoiceRef}
         id="invoice-document-canvas"
-        className="w-full max-w-[750px] bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
+        className="bg-white shadow-2xl relative flex flex-col justify-between overflow-hidden text-stone-900 border border-stone-200"
         style={{
-          aspectRatio: '1414 / 2000',
-          minHeight: '860px',
+          width: '750px',
+          minWidth: '750px',
+          maxWidth: '750px',
+          height: '1060px',
+          minHeight: '1060px',
+          maxHeight: '1060px',
+          boxSizing: 'border-box',
           fontFamily: unifiedFamily,
           letterSpacing: letterSpacing,
         }}
       >
         {/* ================= TOP HEADER ================= */}
-        <div className="p-8 sm:p-10 pb-6 flex items-start justify-between border-b border-stone-200" style={{ fontFamily: unifiedFamily }}>
+        <div className="p-8 pb-6 flex items-start justify-between border-b border-stone-200" style={{ fontFamily: unifiedFamily }}>
           {/* Logo Eliotte MUA */}
           <div>
             <img
               src={logoSrc}
               alt="Eliotte MUA"
-              className="h-14 sm:h-18 w-auto object-contain"
+              className="h-16 w-auto object-contain"
             />
             <p className="text-xs uppercase tracking-widest text-stone-500 mt-2 font-medium" style={{ fontFamily: unifiedFamily }}>
               Eliotte Casimiro • Makeup Artist
@@ -77,15 +82,15 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
 
           {/* FACTURA Box */}
           <div className="text-right">
-            <h2 className="text-2xl sm:text-3xl font-light tracking-[0.25em] text-stone-900 uppercase" style={{ fontFamily: unifiedFamily }}>
+            <h2 className="text-3xl font-light tracking-[0.25em] text-stone-900 uppercase" style={{ fontFamily: unifiedFamily }}>
               FACTURA
             </h2>
-            <div className="mt-2 border border-stone-900 px-4 py-2 inline-block bg-stone-50 text-left min-w-[190px]">
-              <div className="flex justify-between text-xs sm:text-sm font-semibold tracking-wide text-stone-800 border-b border-stone-300 pb-1 mb-1">
+            <div className="mt-2 border border-stone-900 px-4 py-2 inline-block bg-stone-50 text-left min-w-[200px]">
+              <div className="flex justify-between text-sm font-semibold tracking-wide text-stone-800 border-b border-stone-300 pb-1 mb-1">
                 <span className="mr-2">N° FACTURA:</span>
                 <span className="text-stone-950 font-bold" style={{ fontFamily: unifiedFamily }}>{invoiceNumber}</span>
               </div>
-              <div className="text-xs sm:text-sm font-medium text-stone-700">
+              <div className="text-sm font-medium text-stone-700">
                 <span className="font-semibold text-stone-900 block text-[11px] uppercase tracking-wider">FECHA:</span>
                 <span style={{ fontFamily: unifiedFamily }}>{invoiceDate}</span>
               </div>
@@ -94,11 +99,11 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
         </div>
 
         {/* ================= CLIENT INFO SECTION (FULL VISIBILITY) ================= */}
-        <div className="px-8 sm:px-10 py-5 bg-stone-50/60 border-b border-stone-200 text-xs sm:text-sm" style={{ fontFamily: unifiedFamily }}>
+        <div className="px-8 py-5 bg-stone-50/60 border-b border-stone-200 text-sm" style={{ fontFamily: unifiedFamily }}>
           <p className="text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">
             Facturado a / Cotización para:
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-2">
             <div className="flex items-baseline space-x-2 border-b border-stone-300/80 pb-1">
               <span className="font-semibold text-stone-900 w-20 shrink-0">Cliente:</span>
               <span className="font-medium text-stone-900 flex-1 break-words">{clientName || '—'}</span>
@@ -122,7 +127,7 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
               </div>
             )}
             {projectDescription && (
-              <div className="sm:col-span-2 flex items-baseline space-x-2 border-b border-stone-300/80 pb-1">
+              <div className="col-span-2 flex items-baseline space-x-2 border-b border-stone-300/80 pb-1">
                 <span className="font-semibold text-stone-900 w-20 shrink-0">Proyecto:</span>
                 <span className="font-medium text-stone-900 flex-1 break-words">{projectDescription}</span>
               </div>
@@ -131,7 +136,7 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
         </div>
 
         {/* ================= ITEMS TABLE WITH UNIFIED FONT ================= */}
-        <div className="px-8 sm:px-10 py-6 flex-1 flex flex-col justify-start" style={{ fontFamily: unifiedFamily }}>
+        <div className="px-8 py-6 flex-1 flex flex-col justify-start" style={{ fontFamily: unifiedFamily }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
             <thead>
               <tr className="border-b-2 border-stone-900 text-stone-900 uppercase tracking-wider text-[11px] font-bold">
