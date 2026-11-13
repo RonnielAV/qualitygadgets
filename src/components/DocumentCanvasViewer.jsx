@@ -121,7 +121,7 @@ export default function DocumentCanvasViewer({ children, docType, mobileView }) 
             }`}
             title="Ajustar documento al ancho de la pantalla sin cortes"
           >
-            <Smartphone className="w-3.5 h-3.5 text-rose-600" />
+            <Smartphone className="w-3.5 h-3.5 text-stone-800" />
             <span className="text-[11px]">Ajustar Pantalla</span>
           </button>
 

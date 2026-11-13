@@ -49,12 +49,12 @@ export default function Navbar({
 
   const getBadge = () => {
     if (docType === 'masterclass') {
-      return { text: 'Master Class PRO', color: 'bg-amber-100 text-amber-800' };
+      return { text: 'Master Class PRO', color: 'bg-stone-800 text-white' };
     }
     if (docType === 'invoice') {
-      return { text: 'Factura', color: 'bg-stone-200 text-stone-800' };
+      return { text: 'Factura', color: 'bg-stone-800 text-white' };
     }
-    return { text: 'Cotización', color: 'bg-rose-100 text-rose-700' };
+    return { text: 'Cotización', color: 'bg-stone-800 text-white' };
   };
 
   const badge = getBadge();
@@ -85,7 +85,7 @@ export default function Navbar({
                 <span className="font-bold text-stone-900 text-xs sm:text-sm tracking-tight">
                   Eliotte MUA
                 </span>
-                <span className={`text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${badge.color}`}>
+                <span className={`text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full ${badge.color}`}>
                   {badge.text}
                 </span>
               </div>
@@ -100,10 +100,10 @@ export default function Navbar({
             <button
               type="button"
               onClick={onNewDocument}
-              className="px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-all flex items-center space-x-1 shadow-2xs shrink-0"
+              className="px-2.5 py-1 rounded-lg text-xs font-semibold text-stone-900 bg-stone-100 hover:bg-stone-200 border border-stone-300 transition-all flex items-center space-x-1 shadow-2xs shrink-0"
               title={`Iniciar nueva ${docType === 'invoice' ? 'Factura' : 'Cotización'} con correlativo consecutivo`}
             >
-              <PlusCircle className="w-3.5 h-3.5" />
+              <PlusCircle className="w-3.5 h-3.5 text-stone-700" />
               <span>+ Nuevo</span>
             </button>
           )}
@@ -167,7 +167,7 @@ export default function Navbar({
               <Users className="w-3.5 h-3.5 text-stone-600" />
               <span className="hidden sm:inline">Clientes</span>
               {clientsCount > 0 && (
-                <span className="px-1.5 py-0.2 bg-rose-100 text-rose-800 rounded-full text-[10px] font-mono font-bold">
+                <span className="px-1.5 py-0.2 bg-stone-800 text-white rounded-full text-[10px] font-mono font-bold">
                   {clientsCount}
                 </span>
               )}
@@ -189,21 +189,21 @@ export default function Navbar({
           <button
             type="button"
             onClick={onCopyWhatsApp}
-            className={`px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center space-x-1 border shadow-sm ${
+            className={`px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center space-x-1 border shadow-xs ${
               copiedFeedback
-                ? 'bg-emerald-500 text-white border-emerald-500'
-                : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                ? 'bg-stone-900 text-white border-stone-900'
+                : 'bg-stone-100 text-stone-800 border-stone-300 hover:bg-stone-200'
             }`}
             title="Copiar texto resumen formateado para enviar por WhatsApp"
           >
             {copiedFeedback ? (
               <>
-                <Check className="w-3.5 h-3.5" />
+                <Check className="w-3.5 h-3.5 text-stone-300" />
                 <span className="hidden sm:inline">¡Copiado!</span>
               </>
             ) : (
               <>
-                <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                <MessageCircle className="w-3.5 h-3.5 text-stone-700" />
                 <span className="hidden md:inline">WhatsApp</span>
               </>
             )}
@@ -222,16 +222,12 @@ export default function Navbar({
             <span className="sm:hidden">JPG</span>
           </button>
 
-          {/* Download PDF */}
+          {/* Download PDF - Solid High-Fashion Black */}
           <button
             type="button"
             disabled={isExporting}
             onClick={onDownloadPdf}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-all flex items-center space-x-1 shadow-sm disabled:opacity-50 ${
-              docType === 'masterclass'
-                ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-200'
-                : 'bg-rose-600 hover:bg-rose-700 shadow-rose-200'
-            }`}
+            className="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-stone-900 hover:bg-stone-800 border border-stone-900 transition-all flex items-center space-x-1 shadow-xs disabled:opacity-50"
             title="Descargar documento en formato PDF listo para imprimir o enviar"
           >
             <FileDown className="w-3.5 h-3.5" />
@@ -243,10 +239,10 @@ export default function Navbar({
             <button
               type="button"
               onClick={onInstallApp}
-              className="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-all flex items-center space-x-1 shadow-2xs"
+              className="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold text-stone-800 bg-stone-100 hover:bg-stone-200 border border-stone-300 transition-all flex items-center space-x-1 shadow-2xs"
               title="Instalar como app en tu celular o computadora"
             >
-              <Smartphone className="w-3.5 h-3.5 text-rose-600" />
+              <Smartphone className="w-3.5 h-3.5 text-stone-700" />
               <span className="hidden sm:inline">Instalar App</span>
               <span className="sm:hidden">App</span>
             </button>
@@ -268,10 +264,10 @@ export default function Navbar({
             <button
               type="button"
               onClick={onOpenLogoutModal}
-              className="p-1.5 text-stone-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors flex items-center space-x-1"
+              className="p-1.5 text-stone-600 hover:text-stone-950 hover:bg-stone-100 rounded-lg transition-colors flex items-center space-x-1"
               title="Cerrar sesión (te preguntará si deseas descargar backup)"
             >
-              <LogOut className="w-4 h-4 text-stone-600 hover:text-rose-600" />
+              <LogOut className="w-4 h-4 text-stone-600 hover:text-stone-950" />
               <span className="text-xs font-semibold hidden md:inline">Salir</span>
             </button>
           </div>

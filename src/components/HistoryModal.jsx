@@ -64,7 +64,7 @@ export default function HistoryModal({
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-stone-200 flex items-center justify-between bg-stone-900 text-white">
           <div className="flex items-center space-x-2">
-            <Clock className="w-5 h-5 text-amber-400" />
+            <Clock className="w-5 h-5 text-stone-300" />
             <h3 className="text-base sm:text-lg font-bold">
               Historial y Copias de Seguridad
             </h3>
@@ -96,7 +96,7 @@ export default function HistoryModal({
                 type="button"
                 onClick={() => setFilterType('quote')}
                 className={`flex-1 sm:flex-initial px-2.5 py-1 rounded font-medium transition-all ${
-                  filterType === 'quote' ? 'bg-white shadow text-rose-700 font-bold' : 'text-stone-600 hover:text-stone-900'
+                  filterType === 'quote' ? 'bg-white shadow text-stone-900 font-bold' : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
                 Cotizaciones
@@ -114,7 +114,7 @@ export default function HistoryModal({
                 type="button"
                 onClick={() => setFilterType('masterclass')}
                 className={`flex-1 sm:flex-initial px-2.5 py-1 rounded font-medium transition-all ${
-                  filterType === 'masterclass' ? 'bg-white shadow text-amber-700 font-bold' : 'text-stone-600 hover:text-stone-900'
+                  filterType === 'masterclass' ? 'bg-white shadow text-stone-900 font-bold' : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
                 Master Class
@@ -129,7 +129,7 @@ export default function HistoryModal({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar por cliente o N°..."
-                className="w-full pl-8 pr-3 py-1 bg-white border border-stone-300 rounded-lg text-xs text-stone-800 placeholder-stone-400 focus:ring-1 focus:ring-rose-400 outline-none"
+                className="w-full pl-8 pr-3 py-1 bg-white border border-stone-300 rounded-lg text-xs text-stone-800 placeholder-stone-400 focus:ring-1 focus:ring-stone-400 outline-none"
               />
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function HistoryModal({
 
               if (isMasterClass) {
                 title = `Master Class • ${item.data.clientName || 'Propuesta'}`;
-                badgeColor = 'bg-amber-100 text-amber-800';
+                badgeColor = 'bg-stone-200 text-stone-800';
                 badgeText = 'Master Class';
                 totalText = `${item.data.locations?.length || 0} sedes / paquetes`;
               } else if (isInvoice) {
@@ -172,7 +172,7 @@ export default function HistoryModal({
               } else {
                 docNum = item.data.quoteNumber || '';
                 title = docNum ? `Cotización ${docNum}` : (item.data.title || 'Cotización');
-                badgeColor = 'bg-rose-100 text-rose-700';
+                badgeColor = 'bg-stone-200 text-stone-800';
                 badgeText = 'Cotización';
                 const total = item.data.items?.reduce((s, i) => s + ((Number(i.qty) || 1) * (Number(i.price) || 0)), 0) || 0;
                 totalText = `${item.data.currency || 'US$'} ${total.toLocaleString()}`;
@@ -184,9 +184,7 @@ export default function HistoryModal({
                   className="p-3.5 sm:p-4 rounded-xl border border-stone-200 bg-stone-50/70 hover:bg-stone-100/70 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
                 >
                   <div className="flex items-start space-x-3">
-                    <div className={`p-2 rounded-lg shrink-0 mt-0.5 ${
-                      isMasterClass ? 'bg-amber-100 text-amber-700' : (isQuote ? 'bg-rose-100 text-rose-600' : 'bg-stone-200 text-stone-700')
-                    }`}>
+                    <div className="p-2 rounded-lg shrink-0 mt-0.5 bg-stone-200 text-stone-700">
                       {isMasterClass ? <GraduationCap className="w-4 h-4" /> : (isQuote ? <Sparkles className="w-4 h-4" /> : <Receipt className="w-4 h-4" />)}
                     </div>
 
@@ -225,7 +223,7 @@ export default function HistoryModal({
                         onLoadItem(item);
                         onClose();
                       }}
-                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-800 bg-white border border-stone-300 hover:border-rose-400 hover:text-rose-600 shadow-2xs transition-all flex items-center space-x-1"
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-800 bg-white border border-stone-300 hover:border-stone-800 hover:text-stone-950 shadow-2xs transition-all flex items-center space-x-1"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       <span>Cargar</span>
@@ -234,7 +232,7 @@ export default function HistoryModal({
                     <button
                       type="button"
                       onClick={() => onDeleteItem(item.id)}
-                      className="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                      className="p-1.5 text-stone-400 hover:text-stone-950 hover:bg-stone-200 rounded-lg transition-colors"
                       title="Eliminar del historial"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -283,7 +281,7 @@ export default function HistoryModal({
             <button
               type="button"
               onClick={onClearAll}
-              className="text-xs text-rose-600 hover:text-rose-700 font-medium hover:underline flex items-center space-x-1"
+              className="text-xs text-stone-500 hover:text-stone-900 font-medium hover:underline flex items-center space-x-1"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Vaciar Historial</span>

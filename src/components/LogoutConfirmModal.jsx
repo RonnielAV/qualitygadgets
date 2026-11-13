@@ -15,7 +15,7 @@ export default function LogoutConfirmModal({
         {/* Header */}
         <div className="bg-stone-900 text-white p-5 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-400">
+            <div className="w-8 h-8 rounded-lg bg-stone-800 text-stone-200 border border-stone-700 flex items-center justify-center">
               <LogOut className="w-4 h-4" />
             </div>
             <h3 className="font-bold text-sm sm:text-base text-white">
@@ -33,13 +33,13 @@ export default function LogoutConfirmModal({
 
         {/* Content */}
         <div className="p-6 space-y-4">
-          <div className="flex items-start space-x-3 p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-xs">
-            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <div className="flex items-start space-x-3 p-3.5 bg-stone-100 border border-stone-300 rounded-2xl text-stone-800 text-xs">
+            <AlertTriangle className="w-5 h-5 text-stone-700 shrink-0 mt-0.5" />
             <div>
-              <p className="font-bold text-amber-950">
+              <p className="font-bold text-stone-900">
                 ¿Deseas descargar tu copia de seguridad (.json)?
               </p>
-              <p className="text-amber-800 mt-0.5 leading-relaxed">
+              <p className="text-stone-600 mt-0.5 leading-relaxed">
                 Te recomendamos guardar el archivo de respaldo para no perder ninguna cotización o factura creada en esta sesión.
               </p>
             </div>
@@ -50,7 +50,7 @@ export default function LogoutConfirmModal({
             <button
               type="button"
               onClick={onDownloadAndLogout}
-              className="w-full py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs sm:text-sm font-semibold shadow-md shadow-rose-950/20 transition-all flex items-center justify-center space-x-2"
+              className="w-full py-3 px-4 bg-stone-900 hover:bg-black text-white rounded-xl text-xs sm:text-sm font-semibold shadow-md transition-all flex items-center justify-center space-x-2"
             >
               <HardDriveDownload className="w-4 h-4" />
               <span>Descargar Backup (.json) y Salir</span>

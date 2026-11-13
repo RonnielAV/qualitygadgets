@@ -296,27 +296,46 @@ export default function Form({
   };
 
   const handleUpdateModule = (modIndex, field, value) => {
-    const updated = [...(masterClassDoc.modules || [])];
-    updated[modIndex] = { ...updated[modIndex], [field]: value };
-    setMasterClassDoc(prev => ({ ...prev, modules: updated }));
+    setMasterClassDoc(prev => {
+      const updated = (prev.modules || []).map((m, idx) => 
+        idx === modIndex ? { ...m, [field]: value } : m
+      );
+      return { ...prev, modules: updated };
+    });
   };
 
   const handleUpdateTopic = (modIndex, topIndex, value) => {
-    const updated = [...(masterClassDoc.modules || [])];
-    updated[modIndex].topics[topIndex] = value;
-    setMasterClassDoc(prev => ({ ...prev, modules: updated }));
+    setMasterClassDoc(prev => {
+      const updated = (prev.modules || []).map((m, mIdx) => {
+        if (mIdx !== modIndex) return m;
+        const newTopics = [...(m.topics || [])];
+        newTopics[topIndex] = value;
+        return { ...m, topics: newTopics };
+      });
+      return { ...prev, modules: updated };
+    });
   };
 
   const handleAddTopic = (modIndex) => {
-    const updated = [...(masterClassDoc.modules || [])];
-    updated[modIndex].topics = [...(updated[modIndex].topics || []), 'Nuevo tema especializado'];
-    setMasterClassDoc(prev => ({ ...prev, modules: updated }));
+    setMasterClassDoc(prev => {
+      const updated = (prev.modules || []).map((m, mIdx) => {
+        if (mIdx !== modIndex) return m;
+        return { ...m, topics: [...(m.topics || []), 'Nuevo tema especializado'] };
+      });
+      return { ...prev, modules: updated };
+    });
   };
 
   const handleRemoveTopic = (modIndex, topIndex) => {
-    const updated = [...(masterClassDoc.modules || [])];
-    updated[modIndex].topics.splice(topIndex, 1);
-    setMasterClassDoc(prev => ({ ...prev, modules: updated }));
+    setMasterClassDoc(prev => {
+      const updated = (prev.modules || []).map((m, mIdx) => {
+        if (mIdx !== modIndex) return m;
+        const newTopics = [...(m.topics || [])];
+        newTopics.splice(topIndex, 1);
+        return { ...m, topics: newTopics };
+      });
+      return { ...prev, modules: updated };
+    });
   };
 
   const currentFontTheme = (isQuote ? quoteDoc : (isInvoice ? invoiceDoc : masterClassDoc)).fontTheme || 'canva_caveat';
@@ -330,7 +349,7 @@ export default function Form({
           onClick={() => setDocType('quote')}
           className={`flex-1 py-2 px-2 rounded-xl flex items-center justify-center space-x-1.5 text-xs font-semibold transition-all ${
             isQuote
-              ? 'bg-rose-500 text-white shadow-md'
+              ? 'bg-stone-100 text-stone-900 shadow-sm font-bold'
               : 'text-stone-400 hover:text-white hover:bg-stone-800'
           }`}
         >
@@ -343,7 +362,7 @@ export default function Form({
           onClick={() => setDocType('invoice')}
           className={`flex-1 py-2 px-2 rounded-xl flex items-center justify-center space-x-1.5 text-xs font-semibold transition-all ${
             isInvoice
-              ? 'bg-stone-100 text-stone-900 shadow-md'
+              ? 'bg-stone-100 text-stone-900 shadow-sm font-bold'
               : 'text-stone-400 hover:text-white hover:bg-stone-800'
           }`}
         >
@@ -356,11 +375,11 @@ export default function Form({
           onClick={() => setDocType('masterclass')}
           className={`flex-1 py-2 px-2 rounded-xl flex items-center justify-center space-x-1.5 text-xs font-semibold transition-all ${
             isMasterClass
-              ? 'bg-amber-400 text-stone-900 shadow-md font-bold'
+              ? 'bg-stone-100 text-stone-900 shadow-sm font-bold'
               : 'text-stone-400 hover:text-white hover:bg-stone-800'
           }`}
         >
-          <GraduationCap className="w-4 h-4 text-amber-500" />
+          <GraduationCap className="w-4 h-4 text-stone-700" />
           <span className="truncate">Master Class</span>
         </button>
       </div>
@@ -417,7 +436,7 @@ export default function Form({
               onClick={() => setMcTab('proposal')}
               className={`flex-1 py-1.5 font-semibold text-center border-b-2 transition-colors ${
                 mcTab === 'proposal'
-                  ? 'border-amber-500 text-stone-900 font-bold'
+                  ? 'border-stone-900 text-stone-900 font-bold'
                   : 'border-transparent text-stone-500 hover:text-stone-800'
               }`}
             >
@@ -428,7 +447,7 @@ export default function Form({
               onClick={() => setMcTab('syllabus')}
               className={`flex-1 py-1.5 font-semibold text-center border-b-2 transition-colors ${
                 mcTab === 'syllabus'
-                  ? 'border-amber-500 text-stone-900 font-bold'
+                  ? 'border-stone-900 text-stone-900 font-bold'
                   : 'border-transparent text-stone-500 hover:text-stone-800'
               }`}
             >
@@ -445,7 +464,7 @@ export default function Form({
               onClick={() => setActiveTab('template')}
               className={`px-4 py-3 font-medium flex items-center space-x-1.5 whitespace-nowrap border-b-2 transition-colors ${
                 activeTab === 'template'
-                  ? 'border-rose-500 text-rose-600 bg-white font-semibold'
+                  ? 'border-stone-900 text-stone-900 bg-white font-bold'
                   : 'border-transparent text-stone-600 hover:text-stone-900'
               }`}
             >
@@ -459,7 +478,7 @@ export default function Form({
             onClick={() => setActiveTab('client')}
             className={`px-4 py-3 font-medium flex items-center space-x-1.5 whitespace-nowrap border-b-2 transition-colors ${
               activeTab === 'client'
-                ? 'border-rose-500 text-rose-600 bg-white font-semibold'
+                ? 'border-stone-900 text-stone-900 bg-white font-bold'
                 : 'border-transparent text-stone-600 hover:text-stone-900'
             }`}
           >
@@ -472,7 +491,7 @@ export default function Form({
             onClick={() => setActiveTab('items')}
             className={`px-4 py-3 font-medium flex items-center space-x-1.5 whitespace-nowrap border-b-2 transition-colors ${
               activeTab === 'items'
-                ? 'border-rose-500 text-rose-600 bg-white font-semibold'
+                ? 'border-stone-900 text-stone-900 bg-white font-bold'
                 : 'border-transparent text-stone-600 hover:text-stone-900'
             }`}
           >
@@ -485,7 +504,7 @@ export default function Form({
             onClick={() => setActiveTab('notes')}
             className={`px-4 py-3 font-medium flex items-center space-x-1.5 whitespace-nowrap border-b-2 transition-colors ${
               activeTab === 'notes'
-                ? 'border-rose-500 text-rose-600 bg-white font-semibold'
+                ? 'border-stone-900 text-stone-900 bg-white font-bold'
                 : 'border-transparent text-stone-600 hover:text-stone-900'
             }`}
           >
@@ -498,7 +517,7 @@ export default function Form({
             onClick={() => setActiveTab('typography')}
             className={`px-4 py-3 font-medium flex items-center space-x-1.5 whitespace-nowrap border-b-2 transition-colors ${
               activeTab === 'typography'
-                ? 'border-rose-500 text-rose-600 bg-white font-semibold'
+                ? 'border-stone-900 text-stone-900 bg-white font-bold'
                 : 'border-transparent text-stone-600 hover:text-stone-900'
             }`}
           >
@@ -532,7 +551,7 @@ export default function Form({
                     value={masterClassDoc.clientName || ''}
                     onChange={(e) => updateCurrentDoc('clientName', e.target.value)}
                     placeholder="Ej: BEIA Academy / Estudio Privado"
-                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-400 outline-none"
+                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                   />
                   {clients.length > 0 && (
                     <select
@@ -543,7 +562,7 @@ export default function Form({
                         }
                       }}
                       defaultValue=""
-                      className="mt-1.5 w-full px-2 py-1 bg-stone-50 border border-stone-200 rounded-lg text-[11px] text-stone-600 focus:ring-2 focus:ring-amber-400 outline-none"
+                      className="mt-1.5 w-full px-2 py-1 bg-stone-50 border border-stone-200 rounded-lg text-[11px] text-stone-600 focus:ring-2 focus:ring-stone-400 outline-none"
                     >
                       <option value="" disabled>-- Autocompletar desde Directorio de Clientes --</option>
                       {clients.map((c) => (
@@ -562,7 +581,7 @@ export default function Form({
                   <select
                     value={masterClassDoc.currency || 'USD'}
                     onChange={(e) => updateCurrentDoc('currency', e.target.value)}
-                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-400 outline-none bg-white"
+                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none bg-white"
                   >
                     <option value="USD">Dólares (USD $)</option>
                     <option value="RD$">Pesos Dominicanos (RD$)</option>
@@ -618,7 +637,7 @@ export default function Form({
                           value={loc.name}
                           onChange={(e) => handleUpdateLocation(locIdx, 'name', e.target.value)}
                           placeholder="Ej: BEIA Santo Domingo"
-                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-md text-xs font-semibold focus:ring-1 focus:ring-amber-400 outline-none"
+                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-md text-xs font-semibold focus:ring-1 focus:ring-stone-400 outline-none"
                         />
                       </div>
 
@@ -630,7 +649,7 @@ export default function Form({
                           type="number"
                           value={loc.costPerPerson}
                           onChange={(e) => handleUpdateLocation(locIdx, 'costPerPerson', parseFloat(e.target.value) || 0)}
-                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-md text-xs font-mono font-semibold focus:ring-1 focus:ring-amber-400 outline-none"
+                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-md text-xs font-mono font-semibold focus:ring-1 focus:ring-stone-400 outline-none"
                         />
                       </div>
 
@@ -642,7 +661,7 @@ export default function Form({
                           type="number"
                           value={loc.minParticipants}
                           onChange={(e) => handleUpdateLocation(locIdx, 'minParticipants', parseInt(e.target.value) || 1)}
-                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-md text-xs font-mono focus:ring-1 focus:ring-amber-400 outline-none"
+                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-md text-xs font-mono focus:ring-1 focus:ring-stone-400 outline-none"
                         />
                       </div>
                     </div>
@@ -656,7 +675,7 @@ export default function Form({
                         <button
                           type="button"
                           onClick={() => handleAddIncludePoint(locIdx)}
-                          className="text-[11px] text-amber-700 hover:underline font-semibold"
+                          className="text-[11px] text-stone-900 hover:underline font-semibold"
                         >
                           + Agregar beneficio
                         </button>
@@ -669,7 +688,7 @@ export default function Form({
                               type="text"
                               value={inc}
                               onChange={(e) => handleUpdateIncludePoint(locIdx, incIdx, e.target.value)}
-                              className="flex-1 px-2 py-1 bg-white border border-stone-300 rounded text-xs focus:ring-1 focus:ring-amber-400 outline-none"
+                              className="flex-1 px-2 py-1 bg-white border border-stone-300 rounded text-xs focus:ring-1 focus:ring-stone-400 outline-none"
                             />
                             <button
                               type="button"
@@ -693,7 +712,7 @@ export default function Form({
                         value={loc.note || ''}
                         onChange={(e) => handleUpdateLocation(locIdx, 'note', e.target.value)}
                         placeholder="Ej: Cada participante debe llevar su modelo para practicar."
-                        className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-md text-xs italic focus:ring-1 focus:ring-amber-400 outline-none"
+                        className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-md text-xs italic focus:ring-1 focus:ring-stone-400 outline-none"
                       />
                     </div>
                   </div>
@@ -711,7 +730,7 @@ export default function Form({
                 value={masterClassDoc.customNote || ''}
                 onChange={(e) => updateCurrentDoc('customNote', e.target.value)}
                 placeholder="Condiciones de pago, cancelación, etc."
-                className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-amber-400 outline-none"
+                className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-stone-400 outline-none"
               />
             </div>
           </div>
@@ -733,7 +752,7 @@ export default function Form({
                     onClick={() => updateCurrentDoc('fontTheme', theme.id)}
                     className={`p-2.5 rounded-xl border text-left transition-all ${
                       currentFontTheme === theme.id
-                        ? 'border-amber-500 bg-amber-50/50 shadow-sm ring-1 ring-amber-300'
+                        ? 'border-stone-900 bg-stone-100 shadow-sm ring-1 ring-stone-400'
                         : 'border-stone-200 hover:border-stone-300 bg-white'
                     }`}
                   >
@@ -760,7 +779,7 @@ export default function Form({
                 rows={3}
                 value={masterClassDoc.syllabusQuote || ''}
                 onChange={(e) => updateCurrentDoc('syllabusQuote', e.target.value)}
-                className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-amber-400 outline-none"
+                className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-stone-400 outline-none"
               />
             </div>
 
@@ -772,11 +791,43 @@ export default function Form({
                 </h4>
                 <button
                   type="button"
-                  onClick={() => setMasterClassDoc(prev => ({ ...prev, modules: DEFAULT_MASTER_CLASS.modules }))}
-                  className="text-xs text-amber-700 hover:underline"
+                  onClick={() => setMasterClassDoc(prev => ({ ...prev, modules: DEFAULT_MASTER_CLASS.modules, displayMode: 'artistic' }))}
+                  className="text-xs text-stone-600 hover:text-stone-900 hover:underline"
                 >
                   Restablecer Módulos Oficiales
                 </button>
+              </div>
+
+              {/* Mode Selector for Master Class */}
+              <div className="p-2 bg-stone-100 rounded-xl space-y-1.5 border border-stone-200">
+                <label className="block text-[11px] font-bold text-stone-700 uppercase tracking-wide">
+                  Modo de Presentación en Folleto:
+                </label>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => updateCurrentDoc('displayMode', 'artistic')}
+                    className={`py-1.5 px-2 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1 transition-all ${
+                      masterClassDoc.displayMode === 'artistic'
+                        ? 'bg-stone-900 text-white shadow-xs'
+                        : 'bg-white text-stone-700 hover:bg-stone-200 border border-stone-200'
+                    }`}
+                  >
+                    <span>🎨 Canva Oficial (7 Mód.)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updateCurrentDoc('displayMode', 'dynamic')}
+                    className={`py-1.5 px-2 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1 transition-all ${
+                      masterClassDoc.displayMode !== 'artistic'
+                        ? 'bg-stone-900 text-white shadow-xs'
+                        : 'bg-white text-stone-700 hover:bg-stone-200 border border-stone-200'
+                    }`}
+                  >
+                    <Sparkles className="w-3 h-3 text-stone-300" />
+                    <span>✨ Editorial (Mód. 8+)</span>
+                  </button>
+                </div>
               </div>
 
               {(masterClassDoc.modules || []).map((mod, modIdx) => (
@@ -804,7 +855,7 @@ export default function Form({
                           updated.splice(modIdx, 1);
                           updateCurrentDoc('modules', updated);
                         }}
-                        className="p-1 text-stone-400 hover:text-rose-600 transition-colors"
+                        className="p-1 text-stone-400 hover:text-stone-900 transition-colors"
                         title="Eliminar este módulo completo"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -834,7 +885,7 @@ export default function Form({
                     <button
                       type="button"
                       onClick={() => handleAddTopic(modIdx)}
-                      className="text-[10px] text-amber-700 hover:underline font-semibold block mt-1"
+                      className="text-[10px] text-stone-700 hover:text-stone-950 hover:underline font-semibold block mt-1"
                     >
                       + Agregar tema
                     </button>
@@ -852,6 +903,7 @@ export default function Form({
                     topics: ['Técnica profesional avanzada', 'Demostración paso a paso']
                   };
                   updateCurrentDoc('modules', [...(masterClassDoc.modules || []), newMod]);
+                  updateCurrentDoc('displayMode', 'dynamic');
                 }}
                 className="w-full py-2 bg-stone-100 hover:bg-stone-200 border border-dashed border-stone-300 rounded-xl text-xs font-semibold text-stone-700 transition-colors flex items-center justify-center space-x-1.5"
               >
@@ -862,7 +914,7 @@ export default function Form({
               {/* Practice Section Editor */}
               <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-2 pt-3">
                 <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                  <span className="w-2 h-2 rounded-full bg-stone-900"></span>
                   <span>Sección de Práctica con Modelo</span>
                 </h4>
                 <div>
@@ -919,7 +971,7 @@ export default function Form({
                       onClick={() => handleSelectTemplate(tmpl)}
                       className={`text-left p-3 rounded-xl border-2 transition-all flex flex-col justify-between relative overflow-hidden group ${
                         isSelected
-                          ? 'border-rose-500 bg-rose-50/50 shadow-md ring-2 ring-rose-200'
+                          ? 'border-stone-900 bg-stone-100 shadow-sm ring-1 ring-stone-400'
                           : 'border-stone-200 hover:border-stone-400 bg-white'
                       }`}
                     >
@@ -928,7 +980,7 @@ export default function Form({
                           {tmpl.name}
                         </span>
                         {isSelected && (
-                          <CheckCircle2 className="w-4 h-4 text-rose-500 shrink-0" />
+                          <CheckCircle2 className="w-4 h-4 text-stone-900 shrink-0" />
                         )}
                       </div>
 
@@ -976,7 +1028,7 @@ export default function Form({
                       }}
                       className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all ${
                         isCurrent
-                          ? 'border-rose-500 ring-2 ring-rose-300 scale-95 shadow-md'
+                          ? 'border-stone-900 ring-2 ring-stone-400 scale-95 shadow-md'
                           : 'border-stone-200 hover:border-stone-400 opacity-80 hover:opacity-100'
                       }`}
                     >
@@ -991,7 +1043,7 @@ export default function Form({
 
               {/* Upload Custom Photo */}
               <div className="mt-3">
-                <label className="flex items-center justify-center p-3 border-2 border-dashed border-stone-300 rounded-xl hover:border-rose-400 bg-stone-50 hover:bg-rose-50/30 cursor-pointer transition-colors text-xs text-stone-600 space-x-2">
+                <label className="flex items-center justify-center p-3 border-2 border-dashed border-stone-300 rounded-xl hover:border-stone-800 bg-stone-50 hover:bg-stone-100 cursor-pointer transition-colors text-xs text-stone-600 space-x-2">
                   <Upload className="w-4 h-4 text-stone-500" />
                   <span>Subir otra fotografía desde tu dispositivo</span>
                   <input
@@ -1002,7 +1054,7 @@ export default function Form({
                   />
                 </label>
                 {quoteDoc.customBgUrl && (
-                  <div className="mt-2 flex items-center justify-between text-xs text-emerald-600 bg-emerald-50 p-2 rounded-lg">
+                  <div className="mt-2 flex items-center justify-between text-xs text-stone-800 bg-stone-100 border border-stone-200 p-2 rounded-lg">
                     <span>✓ Fotografía personalizada cargada con éxito</span>
                     <button
                       type="button"
@@ -1028,7 +1080,7 @@ export default function Form({
                     value={quoteDoc.title || ''}
                     onChange={(e) => updateCurrentDoc('title', e.target.value)}
                     placeholder="Ej: Wedding / Cotización"
-                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                   />
                 </div>
 
@@ -1041,7 +1093,7 @@ export default function Form({
                     value={quoteDoc.sectionSubtitle || ''}
                     onChange={(e) => updateCurrentDoc('sectionSubtitle', e.target.value)}
                     placeholder="Ej: Price List Santiago"
-                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                   />
                 </div>
 
@@ -1052,7 +1104,7 @@ export default function Form({
                   <select
                     value={quoteDoc.headerTitleColor || '#1a1a1a'}
                     onChange={(e) => updateCurrentDoc('headerTitleColor', e.target.value)}
-                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none bg-white font-medium"
+                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none bg-white font-medium"
                   >
                     <option value="#1a1a1a">Negro Elegante (Canva Original)</option>
                     <option value="#ffffff">Blanco Puro</option>
@@ -1072,7 +1124,7 @@ export default function Form({
             <div className="bg-gradient-to-r from-stone-50 to-stone-100 p-3 sm:p-4 rounded-xl border border-stone-200 shadow-2xs">
               <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                 <label className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
-                  <Hash className="w-3.5 h-3.5 text-rose-500" />
+                  <Hash className="w-3.5 h-3.5 text-stone-700" />
                   <span>
                     {isQuote ? 'N° de Cotización Consecutiva:' : 'N° de Factura Consecutiva:'}
                   </span>
@@ -1084,13 +1136,13 @@ export default function Form({
                     className="px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 text-stone-800 rounded-md text-[11px] font-semibold flex items-center space-x-1 shadow-2xs transition-all"
                     title="Avanzar y generar el siguiente número consecutivo libre"
                   >
-                    <Plus className="w-3 h-3 text-rose-600" />
+                    <Plus className="w-3 h-3 text-stone-700" />
                     <span>+ Siguiente N°</span>
                   </button>
                   <button
                     type="button"
                     onClick={isQuote ? onNewQuote : onNewInvoice}
-                    className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-md text-[11px] font-semibold flex items-center space-x-1 shadow-2xs transition-all"
+                    className="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 border border-stone-300 text-stone-800 rounded-md text-[11px] font-semibold flex items-center space-x-1 shadow-2xs transition-all"
                     title="Comenzar un nuevo documento con nuevo número correlativo"
                   >
                     <PlusCircle className="w-3 h-3" />
@@ -1105,15 +1157,15 @@ export default function Form({
                   value={isQuote ? (quoteDoc.quoteNumber || 'COT-2026-001') : (invoiceDoc.invoiceNumber || 'FAC-2026-001')}
                   onChange={(e) => updateCurrentDoc(isQuote ? 'quoteNumber' : 'invoiceNumber', e.target.value.toUpperCase())}
                   placeholder={isQuote ? "COT-2026-001" : "FAC-2026-001"}
-                  className="w-full px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold tracking-wider text-stone-900 focus:ring-2 focus:ring-rose-400 outline-none uppercase"
+                  className="w-full px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold tracking-wider text-stone-900 focus:ring-2 focus:ring-stone-400 outline-none uppercase"
                 />
               </div>
 
               {/* Duplicate Warning */}
               {((isQuote && isNumberDuplicated('quote', quoteDoc.quoteNumber, history)) ||
                 (isInvoice && isNumberDuplicated('invoice', invoiceDoc.invoiceNumber, history))) && (
-                <div className="mt-2 p-2 bg-amber-50 border border-amber-300 rounded-lg flex items-center space-x-2 text-xs text-amber-800 font-medium animate-pulse">
-                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                <div className="mt-2 p-2 bg-stone-100 border border-stone-300 rounded-lg flex items-center space-x-2 text-xs text-stone-800 font-medium">
+                  <AlertTriangle className="w-4 h-4 text-stone-700 shrink-0" />
                   <span>
                     ⚠️ Este número ya existe en el historial. Haz clic en <strong>"+ Siguiente N°"</strong> para no duplicar.
                   </span>
@@ -1122,17 +1174,17 @@ export default function Form({
             </div>
 
             {/* Quick Client Selection Banner */}
-            <div className="bg-rose-50/70 border border-rose-200/90 rounded-2xl p-3.5 space-y-2.5 shadow-2xs">
+            <div className="bg-stone-50 border border-stone-300 rounded-2xl p-3.5 space-y-2.5 shadow-2xs">
               <div className="flex items-center justify-between">
-                <label className="text-[11px] font-bold text-rose-950 uppercase tracking-wider flex items-center space-x-1.5">
-                  <Users className="w-3.5 h-3.5 text-rose-600" />
+                <label className="text-[11px] font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
+                  <Users className="w-3.5 h-3.5 text-stone-700" />
                   <span>Directorio de Clientes:</span>
                 </label>
                 {onOpenClientsModal && (
                   <button
                     type="button"
                     onClick={onOpenClientsModal}
-                    className="text-[11px] text-rose-700 hover:text-rose-900 font-bold underline underline-offset-2 flex items-center space-x-1 transition-colors"
+                    className="text-[11px] text-stone-700 hover:text-stone-950 font-bold hover:underline flex items-center space-x-1 transition-colors"
                   >
                     <span>Abrir Directorio ({clients.length})</span>
                   </button>
@@ -1146,7 +1198,7 @@ export default function Form({
                     e.target.value = '';
                   }}
                   defaultValue=""
-                  className="w-full px-3 py-2 bg-white border border-rose-200 rounded-xl text-xs text-stone-900 font-semibold focus:ring-2 focus:ring-rose-400 outline-none shadow-2xs"
+                  className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs text-stone-900 font-semibold focus:ring-2 focus:ring-stone-400 outline-none shadow-2xs"
                 >
                   <option value="" disabled>
                     ⚡ Selecciona un cliente para autocompletar ({clients.length} disponibles)...
@@ -1175,7 +1227,7 @@ export default function Form({
                   value={(isQuote ? quoteDoc : invoiceDoc).clientName || ''}
                   onChange={(e) => updateCurrentDoc('clientName', e.target.value)}
                   placeholder="Ej: Eugenia Pérez / Carlos"
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                 />
               </div>
 
@@ -1189,7 +1241,7 @@ export default function Form({
                   value={(isQuote ? quoteDoc : invoiceDoc).clientEmail || ''}
                   onChange={(e) => updateCurrentDoc('clientEmail', e.target.value)}
                   placeholder="cliente@ejemplo.com"
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                 />
               </div>
 
@@ -1203,7 +1255,7 @@ export default function Form({
                   value={(isQuote ? quoteDoc : invoiceDoc).clientPhone || ''}
                   onChange={(e) => updateCurrentDoc('clientPhone', e.target.value)}
                   placeholder="Ej: (809) 555-1234"
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                 />
               </div>
 
@@ -1217,7 +1269,7 @@ export default function Form({
                   value={(isQuote ? quoteDoc : invoiceDoc).company || ''}
                   onChange={(e) => updateCurrentDoc('company', e.target.value)}
                   placeholder="Ej: Persio Abreu SRL / Producciones"
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                 />
               </div>
 
@@ -1230,7 +1282,7 @@ export default function Form({
                   value={(isQuote ? quoteDoc : invoiceDoc).rnc || ''}
                   onChange={(e) => updateCurrentDoc('rnc', e.target.value)}
                   placeholder="Ej: 102-32053-5"
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                 />
               </div>
 
@@ -1245,7 +1297,7 @@ export default function Form({
                     value={quoteDoc.eventDate || ''}
                     onChange={(e) => updateCurrentDoc('eventDate', e.target.value)}
                     placeholder="Ej: 25 de octubre 2026"
-                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                   />
                 </div>
               ) : (
@@ -1260,7 +1312,7 @@ export default function Form({
                       value={invoiceDoc.invoiceNumber || ''}
                       onChange={(e) => updateCurrentDoc('invoiceNumber', e.target.value)}
                       placeholder="FAC-2026-001"
-                      className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none font-mono"
+                      className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none font-mono"
                     />
                   </div>
 
@@ -1274,7 +1326,7 @@ export default function Form({
                       value={invoiceDoc.invoiceDate || ''}
                       onChange={(e) => updateCurrentDoc('invoiceDate', e.target.value)}
                       placeholder="31 de julio del 2026"
-                      className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                      className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                     />
                   </div>
                 </>
@@ -1291,7 +1343,7 @@ export default function Form({
                   value={invoiceDoc.projectDescription || ''}
                   onChange={(e) => updateCurrentDoc('projectDescription', e.target.value)}
                   placeholder="Ej: Maquillaje y estilismo para campaña comercial otoño-invierno 2026"
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-400 outline-none"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
                 />
               </div>
             )}
@@ -1300,7 +1352,7 @@ export default function Form({
             <div className="bg-stone-50 border border-stone-200/90 rounded-2xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-2xs">
               <div className="space-y-0.5">
                 <span className="text-xs font-bold text-stone-900 flex items-center space-x-1.5">
-                  <UserPlus className="w-3.5 h-3.5 text-rose-600" />
+                  <UserPlus className="w-3.5 h-3.5 text-stone-700" />
                   <span>¿Cliente nuevo o datos modificados?</span>
                 </span>
                 <p className="text-[11px] text-stone-500">
@@ -1313,7 +1365,7 @@ export default function Form({
                 className="w-full sm:w-auto px-3.5 py-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl flex items-center justify-center space-x-1.5 shadow-2xs transition-all active:scale-[0.98] shrink-0"
                 title="Guardar este cliente en el directorio"
               >
-                <UserPlus className="w-3.5 h-3.5 text-rose-400" />
+                <UserPlus className="w-3.5 h-3.5 text-stone-300" />
                 <span>Guardar en Directorio</span>
               </button>
             </div>
@@ -1366,7 +1418,7 @@ export default function Form({
                 <button
                   type="button"
                   onClick={handleAddCustomItem}
-                  className="px-3 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-semibold hover:bg-rose-700 transition-colors flex items-center space-x-1 shadow-sm"
+                  className="px-3 py-1.5 bg-stone-900 text-white rounded-lg text-xs font-semibold hover:bg-stone-800 transition-colors flex items-center space-x-1 shadow-sm"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>+ Agregar Servicio</span>
@@ -1375,10 +1427,10 @@ export default function Form({
                 <button
                   type="button"
                   onClick={handleAddDiscountItem}
-                  className="px-2.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-300 rounded-lg text-xs font-semibold hover:bg-emerald-100 transition-colors flex items-center space-x-1"
+                  className="px-2.5 py-1.5 bg-stone-100 text-stone-800 border border-stone-300 rounded-lg text-xs font-semibold hover:bg-stone-200 transition-colors flex items-center space-x-1"
                   title="Agregar una línea de descuento promocional o cliente frecuente"
                 >
-                  <Percent className="w-3.5 h-3.5 text-emerald-600" />
+                  <Percent className="w-3.5 h-3.5 text-stone-700" />
                   <span>- Descuento</span>
                 </button>
               </div>
@@ -1395,7 +1447,7 @@ export default function Form({
                     key={idx}
                     type="button"
                     onClick={() => handleAddCatalogItem(srv)}
-                    className="text-[11px] px-2.5 py-1 bg-white hover:bg-rose-50 hover:border-rose-300 border border-stone-300 rounded-md text-stone-700 hover:text-rose-700 transition-colors flex items-center space-x-1"
+                    className="text-[11px] px-2.5 py-1 bg-white hover:bg-stone-100 hover:border-stone-400 border border-stone-300 rounded-md text-stone-800 transition-colors flex items-center space-x-1"
                   >
                     <span>+ {srv.name}</span>
                     <span className="text-stone-400 font-mono">
@@ -1430,12 +1482,12 @@ export default function Form({
                           <span>Descripción del Servicio:</span>
                         </label>
                         {item.optional && (
-                          <span className="text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full">
+                          <span className="text-[10px] bg-stone-200 text-stone-700 font-semibold px-2 py-0.5 rounded-full">
                             Opcional
                           </span>
                         )}
                         {item.price < 0 && (
-                          <span className="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">
+                          <span className="text-[10px] bg-stone-200 text-stone-800 font-semibold px-2 py-0.5 rounded-full">
                             Línea de Descuento
                           </span>
                         )}
@@ -1445,7 +1497,7 @@ export default function Form({
                         value={item.description}
                         onChange={(e) => handleUpdateItem(index, 'description', e.target.value)}
                         placeholder="Descripción completa del servicio (ej. Servicio de maquillaje full day para fotos...)"
-                        className="w-full px-3 py-2 bg-white border border-stone-300 rounded-lg text-xs font-medium text-stone-900 focus:ring-2 focus:ring-rose-400 outline-none resize-none leading-relaxed"
+                        className="w-full px-3 py-2 bg-white border border-stone-300 rounded-lg text-xs font-medium text-stone-900 focus:ring-2 focus:ring-stone-400 outline-none resize-none leading-relaxed"
                       />
                     </div>
 
@@ -1461,7 +1513,7 @@ export default function Form({
                           min="1"
                           value={item.qty || 1}
                           onChange={(e) => handleUpdateItem(index, 'qty', parseInt(e.target.value) || 1)}
-                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-mono text-center font-bold text-stone-800 focus:ring-1 focus:ring-rose-400 outline-none"
+                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-mono text-center font-bold text-stone-800 focus:ring-1 focus:ring-stone-400 outline-none"
                         />
                       </div>
 
@@ -1475,7 +1527,7 @@ export default function Form({
                           step="any"
                           value={item.price}
                           onChange={(e) => handleUpdateItem(index, 'price', parseFloat(e.target.value) || 0)}
-                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold text-right text-stone-900 focus:ring-1 focus:ring-rose-400 outline-none"
+                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold text-right text-stone-900 focus:ring-1 focus:ring-stone-400 outline-none"
                         />
                       </div>
 
@@ -1489,7 +1541,7 @@ export default function Form({
                           value={item.note || ''}
                           onChange={(e) => handleUpdateItem(index, 'note', e.target.value)}
                           placeholder="ej: 4 damas"
-                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-lg text-xs italic text-stone-700 focus:ring-1 focus:ring-rose-400 outline-none"
+                          className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-lg text-xs italic text-stone-700 focus:ring-1 focus:ring-stone-400 outline-none"
                         />
                       </div>
 
@@ -1497,7 +1549,7 @@ export default function Form({
                       <div className="flex items-center justify-between sm:justify-end space-x-2 pt-3 sm:pt-0">
                         <div className="text-right">
                           <span className="block text-[10px] text-stone-400 font-medium">Subtotal</span>
-                          <span className={`text-xs font-bold font-mono ${itemTotal < 0 ? 'text-emerald-700' : 'text-stone-900'}`}>
+                          <span className="text-xs font-bold font-mono text-stone-900">
                             {formattedSubtotal}
                           </span>
                         </div>
@@ -1509,7 +1561,7 @@ export default function Form({
                                 type="checkbox"
                                 checked={!!item.optional}
                                 onChange={(e) => handleUpdateItem(index, 'optional', e.target.checked)}
-                                className="rounded text-rose-500 focus:ring-rose-400"
+                                className="rounded text-stone-900 focus:ring-stone-400"
                               />
                               <span className="text-[10px] font-semibold text-stone-600 ml-1 sm:hidden">Opc.</span>
                             </label>
@@ -1518,7 +1570,7 @@ export default function Form({
                           <button
                             type="button"
                             onClick={() => handleRemoveItem(index)}
-                            className="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
+                            className="p-1.5 text-stone-400 hover:text-stone-950 hover:bg-stone-200 rounded-md transition-colors"
                             title="Eliminar este servicio"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1560,7 +1612,7 @@ export default function Form({
                   value={invoiceDoc.discount || 0}
                   onChange={(e) => updateCurrentDoc('discount', parseFloat(e.target.value) || 0)}
                   placeholder="0.00"
-                  className="w-32 px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-mono text-right focus:ring-1 focus:ring-rose-400 outline-none"
+                  className="w-32 px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-mono text-right focus:ring-1 focus:ring-stone-400 outline-none"
                 />
               </div>
             )}
@@ -1574,7 +1626,7 @@ export default function Form({
               Condiciones de Pago & Datos Bancarios
             </h3>
 
-            <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1">
+            <div className="p-3 bg-stone-100 rounded-xl border border-stone-200 text-xs text-stone-800 space-y-1">
               <p className="font-semibold">🏦 Cuenta Oficial Eliotte MUA pre-configurada:</p>
               <p>• {BUSINESS_INFO.bank}</p>
               <p>• {BUSINESS_INFO.accountType}: <strong>{BUSINESS_INFO.accountNumber}</strong></p>
@@ -1590,7 +1642,7 @@ export default function Form({
                 value={(isQuote ? quoteDoc : invoiceDoc).notes || ''}
                 onChange={(e) => updateCurrentDoc('notes', e.target.value)}
                 placeholder="Escribe las condiciones de pago, separación de fecha, etc."
-                className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-rose-400 outline-none"
+                className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-stone-400 outline-none"
               />
             </div>
           </div>
@@ -1602,7 +1654,7 @@ export default function Form({
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <h3 className="text-sm font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
-                  <Type className="w-4 h-4 text-rose-500" />
+                  <Type className="w-4 h-4 text-stone-700" />
                   <span>Formatos de Texto / Tipografía Unificada:</span>
                 </h3>
               </div>
@@ -1621,7 +1673,7 @@ export default function Form({
                       onClick={() => updateCurrentDoc('fontTheme', theme.id)}
                       className={`p-3 rounded-xl border-2 text-left transition-all relative overflow-hidden ${
                         isSelected
-                          ? 'border-rose-500 bg-rose-50/50 shadow-md ring-2 ring-rose-200'
+                          ? 'border-stone-900 bg-stone-100 shadow-sm ring-1 ring-stone-400'
                           : 'border-stone-200 hover:border-stone-400 bg-white'
                       }`}
                     >
@@ -1671,7 +1723,7 @@ export default function Form({
                   onClick={() => updateCurrentDoc('logoVariant', 'white')}
                   className={`p-2.5 rounded-xl border-2 flex flex-col items-center justify-between transition-all ${
                     (isQuote ? quoteDoc : invoiceDoc).logoVariant === 'white'
-                      ? 'border-rose-500 bg-rose-50/40 ring-2 ring-rose-200'
+                      ? 'border-stone-900 bg-stone-100 ring-1 ring-stone-400'
                       : 'border-stone-200 hover:border-stone-400 bg-white'
                   }`}
                 >
@@ -1692,7 +1744,7 @@ export default function Form({
                   onClick={() => updateCurrentDoc('logoVariant', 'black')}
                   className={`p-2.5 rounded-xl border-2 flex flex-col items-center justify-between transition-all ${
                     (isQuote ? quoteDoc : invoiceDoc).logoVariant === 'black'
-                      ? 'border-rose-500 bg-rose-50/40 ring-2 ring-rose-200'
+                      ? 'border-stone-900 bg-stone-100 ring-1 ring-stone-400'
                       : 'border-stone-200 hover:border-stone-400 bg-white'
                   }`}
                 >
@@ -1713,7 +1765,7 @@ export default function Form({
                   onClick={() => updateCurrentDoc('logoVariant', 'grey')}
                   className={`p-2.5 rounded-xl border-2 flex flex-col items-center justify-between transition-all ${
                     (isQuote ? quoteDoc : invoiceDoc).logoVariant === 'grey'
-                      ? 'border-rose-500 bg-rose-50/40 ring-2 ring-rose-200'
+                      ? 'border-stone-900 bg-stone-100 ring-1 ring-stone-400'
                       : 'border-stone-200 hover:border-stone-400 bg-white'
                   }`}
                 >
@@ -1748,7 +1800,7 @@ export default function Form({
                   step="0.05"
                   value={quoteDoc.bgOpacity || 0.88}
                   onChange={(e) => updateCurrentDoc('bgOpacity', parseFloat(e.target.value))}
-                  className="w-full accent-rose-500"
+                  className="w-full accent-stone-900"
                 />
               </div>
             )}
@@ -1764,7 +1816,7 @@ export default function Form({
                   type="checkbox"
                   checked={quoteDoc.showQr !== false}
                   onChange={(e) => updateCurrentDoc('showQr', e.target.checked)}
-                  className="w-4 h-4 rounded text-rose-500 focus:ring-rose-400"
+                  className="w-4 h-4 rounded text-stone-900 focus:ring-stone-400"
                 />
               </div>
             )}

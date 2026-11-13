@@ -23,6 +23,7 @@ import {
 } from './utils/clientUtils';
 import { 
   downloadElementAsPdf, 
+  downloadMultiPagePdf,
   downloadElementAsImage, 
   generateWhatsAppMessage 
 } from './utils/exportUtils';
@@ -523,11 +524,59 @@ export default function App() {
 
   // PDF Export
   const handleDownloadPdf = async () => {
-    const el = getActiveElement();
-    if (!el) return;
     setIsExporting(true);
     showToast('Generando PDF en alta resolución con tipografía nativa...');
     try {
+      if (docType === 'masterclass') {
+        const pageIds = [
+          'mc-export-page-1',
+          'mc-export-page-2',
+          'mc-export-page-3',
+          'mc-export-page-4',
+          'mc-export-page-5'
+        ];
+        const elements = pageIds.map(id => document.getElementById(id)).filter(Boolean);
+        if (elements.length > 0) {
+          const name = `MasterClass-Dossier-Completo-Eliotte-MUA-${masterClassDoc.clientName || 'Cliente'}`.replace(/\s+/g, '_');
+          await downloadMultiPagePdf(elements, name, (curr, total) => {
+            showToast(`Generando Folleto Completo: Página ${curr} de ${total}...`);
+          });
+          showToast('¡Folleto de Master Class completo descargado (5 páginas)!');
+          return;
+        }
+      } else if (docType === 'invoice') {
+        const pages = document.querySelectorAll('.invoice-document-page');
+        const name = `${invoiceDoc.invoiceNumber || 'Factura'}-Eliotte-MUA-${invoiceDoc.clientName || 'Cliente'}`.replace(/\s+/g, '_');
+        if (pages && pages.length > 1) {
+          await downloadMultiPagePdf(Array.from(pages), name, (curr, total) => {
+            showToast(`Generando Factura: Página ${curr} de ${total}...`);
+          });
+          showToast(`¡Factura completa descargada (${pages.length} páginas)!`);
+          return;
+        } else if (pages && pages.length === 1) {
+          await downloadElementAsPdf(pages[0], name);
+          showToast('¡Factura descargada con éxito!');
+          return;
+        }
+      } else if (docType === 'quote') {
+        const pages = document.querySelectorAll('.quote-document-page');
+        const name = `${quoteDoc.quoteNumber || 'Cotizacion'}-Eliotte-MUA-${quoteDoc.clientName || 'Cliente'}`.replace(/\s+/g, '_');
+        if (pages && pages.length > 1) {
+          await downloadMultiPagePdf(Array.from(pages), name, (curr, total) => {
+            showToast(`Generando Cotización: Página ${curr} de ${total}...`);
+          });
+          showToast(`¡Cotización completa descargada (${pages.length} páginas)!`);
+          return;
+        } else if (pages && pages.length === 1) {
+          await downloadElementAsPdf(pages[0], name);
+          showToast('¡Cotización descargada con éxito!');
+          return;
+        }
+      }
+
+      // Fallback to active single element
+      const el = getActiveElement();
+      if (!el) return;
       let name;
       if (docType === 'quote') {
         name = `${quoteDoc.quoteNumber || 'Cotizacion'}-Eliotte-MUA-${quoteDoc.clientName || 'Cliente'}`.replace(/\s+/g, '_');
@@ -633,7 +682,7 @@ export default function App() {
       {/* Auto-save status bar */}
       <div className="no-print bg-stone-200/70 border-b border-stone-300 px-3 sm:px-4 py-1 flex items-center justify-between text-[11px] text-stone-600">
         <div className="flex items-center space-x-1.5 truncate">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+          <span className="w-2 h-2 rounded-full bg-stone-500 animate-pulse shrink-0"></span>
           <span className="truncate">Auto-guardado activo:</span>
           <span className="font-semibold text-stone-800 truncate">Cotizaciones y facturas seguras.</span>
         </div>
@@ -647,7 +696,7 @@ export default function App() {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-20 lg:bottom-6 right-4 sm:right-6 z-50 bg-stone-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2.5 text-xs sm:text-sm animate-in slide-in-from-bottom duration-200 border border-stone-700 max-w-[90vw]">
-          <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+          <CheckCircle className="w-4 h-4 text-stone-300 shrink-0" />
           <span className="break-words">{toastMessage}</span>
         </div>
       )}
@@ -659,7 +708,7 @@ export default function App() {
           onClick={() => setMobileView('form')}
           className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1.5 transition-all ${
             mobileView === 'form'
-              ? 'bg-rose-600 text-white shadow-sm'
+              ? 'bg-stone-900 text-white shadow-sm'
               : 'text-stone-600 bg-stone-100 hover:bg-stone-200'
           }`}
         >
@@ -742,7 +791,7 @@ export default function App() {
           onClick={() => setMobileView('form')}
           className={`flex-1 flex items-center justify-center space-x-1.5 py-2 px-3 rounded-xl text-xs font-semibold transition-all ${
             mobileView === 'form' 
-              ? 'bg-rose-600 text-white shadow-md' 
+              ? 'bg-stone-800 text-white shadow-md' 
               : 'text-stone-400 hover:text-white'
           }`}
         >
@@ -766,7 +815,7 @@ export default function App() {
         <button
           type="button"
           onClick={handleCopyWhatsApp}
-          className="flex items-center justify-center py-2 px-3 rounded-xl text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+          className="flex items-center justify-center py-2 px-3 rounded-xl text-xs font-semibold text-stone-300 hover:text-white transition-colors"
           title="Copiar texto para WhatsApp"
         >
           <Share2 className="w-4 h-4" />

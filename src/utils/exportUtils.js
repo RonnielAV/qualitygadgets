@@ -124,6 +124,63 @@ export async function downloadElementAsPdf(element, filename = 'Eliotte-MUA-Docu
 }
 
 /**
+ * Downloads multiple DOM elements into a single multi-page PDF (A4 format)
+ */
+export async function downloadMultiPagePdf(elements, filename = 'Eliotte-MUA-Documento', onProgress) {
+  const validElements = (elements || []).filter(Boolean);
+  if (validElements.length === 0) return false;
+
+  try {
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: true
+    });
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    for (let i = 0; i < validElements.length; i++) {
+      const el = validElements[i];
+      if (onProgress) {
+        onProgress(i + 1, validElements.length);
+      }
+      if (i > 0) {
+        pdf.addPage('a4', 'portrait');
+      }
+
+      const targetWidth = el.offsetWidth || 750;
+      const targetHeight = el.offsetHeight || 1060;
+
+      const options = {
+        quality: 0.98,
+        pixelRatio: 2.2,
+        backgroundColor: '#ffffff',
+        cacheBust: true,
+        skipFonts: false,
+        width: targetWidth,
+        height: targetHeight,
+        style: {
+          transform: 'none',
+          transformOrigin: 'top left',
+          margin: '0',
+        }
+      };
+
+      const imgData = await toJpeg(el, options);
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+    }
+
+    pdf.save(`${filename}.pdf`);
+    return true;
+  } catch (err) {
+    console.error('Error generating multi-page PDF:', err);
+    throw err;
+  }
+}
+
+/**
  * Copies a nice text summary for WhatsApp / SMS
  */
 export function generateWhatsAppMessage(doc, docType = 'quote') {

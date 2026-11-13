@@ -138,7 +138,7 @@ export default function UserManagementModal({
         {/* Header */}
         <div className="bg-stone-900 text-white p-4 sm:p-5 flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-rose-500/20 flex items-center justify-center text-rose-400">
+            <div className="w-9 h-9 rounded-xl bg-stone-800 text-stone-200 border border-stone-700 flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
             <div>
@@ -179,7 +179,7 @@ export default function UserManagementModal({
                   >
                     <div className="flex items-center space-x-3">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-bold text-sm ${
-                        u.isAdmin ? 'bg-stone-900 text-white shadow-sm' : 'bg-rose-100 text-rose-700'
+                        u.isAdmin ? 'bg-stone-900 text-white shadow-sm' : 'bg-stone-200 text-stone-800'
                       }`}>
                         {u.name ? u.name.charAt(0).toUpperCase() : 'U'}
                       </div>
@@ -239,7 +239,7 @@ export default function UserManagementModal({
                         <button
                           type="button"
                           onClick={() => handleDeleteUser(u.id, u.name)}
-                          className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                          className="p-1.5 rounded-lg text-stone-400 hover:text-stone-900 hover:bg-stone-200 transition-colors"
                           title="Eliminar usuario"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -257,7 +257,7 @@ export default function UserManagementModal({
             <div className="bg-stone-50/80 p-4 sm:p-5 rounded-2xl border border-stone-200 space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
-                  <UserPlus className="w-4 h-4 text-rose-600" />
+                  <UserPlus className="w-4 h-4 text-stone-900" />
                   <span>{editingUserId ? 'Editar Usuario / Cambiar Clave' : 'Registrar Nuevo Miembro del Equipo:'}</span>
                 </h4>
                 {editingUserId && (
@@ -272,8 +272,8 @@ export default function UserManagementModal({
               </div>
 
               {formError && (
-                <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs font-medium flex items-center space-x-1.5">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
+                <div className="p-2.5 bg-stone-100 border border-stone-300 rounded-xl text-stone-800 text-xs font-medium flex items-center space-x-1.5">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-stone-700" />
                   <span>{formError}</span>
                 </div>
               )}
@@ -291,7 +291,7 @@ export default function UserManagementModal({
                       onChange={(e) => setFormName(e.target.value)}
                       placeholder="Ej: Sofia Martinez"
                       required
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                     />
                   </div>
 
@@ -306,7 +306,7 @@ export default function UserManagementModal({
                       onChange={(e) => setFormUsername(e.target.value)}
                       placeholder="ej: sofia"
                       required
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs font-mono lowercase focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs font-mono lowercase focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                     />
                   </div>
 
@@ -322,7 +322,7 @@ export default function UserManagementModal({
                         onChange={(e) => setFormPassword(e.target.value)}
                         placeholder="ej: clave123"
                         required
-                        className="w-full px-3 pr-8 py-2 bg-white border border-stone-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                        className="w-full px-3 pr-8 py-2 bg-white border border-stone-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                       />
                       <button
                         type="button"
@@ -349,7 +349,7 @@ export default function UserManagementModal({
                       value={formRole}
                       onChange={(e) => setFormRole(e.target.value)}
                       placeholder="ej: Asistente / Maquilladora Social"
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                     />
                   </div>
                 </div>
@@ -361,7 +361,7 @@ export default function UserManagementModal({
                       type="checkbox"
                       checked={formIsAdmin}
                       onChange={(e) => setFormIsAdmin(e.target.checked)}
-                      className="rounded text-rose-600 focus:ring-rose-400"
+                      className="rounded text-stone-900 focus:ring-stone-400"
                     />
                     <span>Conceder permisos de Administradora (gestionar otros usuarios)</span>
                   </label>
@@ -382,7 +382,7 @@ export default function UserManagementModal({
                     type="submit"
                     className="px-4 py-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center space-x-1.5"
                   >
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <Check className="w-3.5 h-3.5 text-stone-300" />
                     <span>{editingUserId ? 'Guardar Cambios' : 'Registrar Usuario'}</span>
                   </button>
                 </div>

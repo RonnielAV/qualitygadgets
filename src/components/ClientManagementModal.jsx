@@ -156,7 +156,7 @@ export default function ClientManagementModal({
         {/* Header */}
         <div className="bg-stone-900 text-white p-4 sm:p-5 flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-rose-500/20 flex items-center justify-center text-rose-400">
+            <div className="w-9 h-9 rounded-xl bg-stone-800 text-stone-200 border border-stone-700 flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
             <div>
@@ -189,14 +189,14 @@ export default function ClientManagementModal({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por nombre, empresa, RNC, correo o teléfono..."
-              className="w-full pl-9 pr-4 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+              className="w-full pl-9 pr-4 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
             />
           </div>
 
           <button
             type="button"
             onClick={handleStartAdd}
-            className="w-full sm:w-auto px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 shadow-sm transition-all shrink-0"
+            className="w-full sm:w-auto px-3.5 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 shadow-sm transition-all shrink-0"
           >
             <UserPlus className="w-4 h-4" />
             <span>+ Nuevo Cliente</span>
@@ -208,10 +208,10 @@ export default function ClientManagementModal({
           
           {/* Add / Edit Form Modal Layer if active */}
           {showAddForm && (
-            <div className="bg-stone-50 p-4 sm:p-5 rounded-2xl border-2 border-rose-200 shadow-sm mb-4 space-y-3 animate-in slide-in-from-top-2 duration-150">
+            <div className="bg-stone-50 p-4 sm:p-5 rounded-2xl border border-stone-300 shadow-sm mb-4 space-y-3 animate-in slide-in-from-top-2 duration-150">
               <div className="flex items-center justify-between pb-2 border-b border-stone-200">
                 <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
-                  <UserPlus className="w-4 h-4 text-rose-600" />
+                  <UserPlus className="w-4 h-4 text-stone-900" />
                   <span>{editingClientId ? 'Editar Datos del Cliente:' : 'Registrar Nuevo Cliente en Directorio:'}</span>
                 </h4>
                 <button
@@ -224,8 +224,8 @@ export default function ClientManagementModal({
               </div>
 
               {formError && (
-                <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs font-medium flex items-center space-x-1.5">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
+                <div className="p-2.5 bg-stone-100 border border-stone-300 rounded-xl text-stone-800 text-xs font-medium flex items-center space-x-1.5">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-stone-700" />
                   <span>{formError}</span>
                 </div>
               )}
@@ -242,7 +242,7 @@ export default function ClientManagementModal({
                       onChange={(e) => setFormName(e.target.value)}
                       placeholder="Ej: Eugenia Pérez"
                       required
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                     />
                   </div>
 
@@ -255,7 +255,7 @@ export default function ClientManagementModal({
                       value={formCompany}
                       onChange={(e) => setFormCompany(e.target.value)}
                       placeholder="Ej: Persio Abreu SRL"
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                     />
                   </div>
 
@@ -268,7 +268,7 @@ export default function ClientManagementModal({
                       value={formRnc}
                       onChange={(e) => setFormRnc(e.target.value)}
                       placeholder="Ej: 102-32053-5"
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                     />
                   </div>
 
@@ -281,7 +281,7 @@ export default function ClientManagementModal({
                       value={formEmail}
                       onChange={(e) => setFormEmail(e.target.value)}
                       placeholder="cliente@ejemplo.com"
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                     />
                   </div>
 
@@ -294,7 +294,7 @@ export default function ClientManagementModal({
                       value={formPhone}
                       onChange={(e) => setFormPhone(e.target.value)}
                       placeholder="Ej: (849) 220-9464"
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                     />
                   </div>
 
@@ -307,7 +307,7 @@ export default function ClientManagementModal({
                       value={formNotes}
                       onChange={(e) => setFormNotes(e.target.value)}
                       placeholder="Ej: Maquillaje Novia, Retoque sesión"
-                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-400 outline-none text-stone-900"
+                      className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:ring-2 focus:ring-stone-400 outline-none text-stone-900"
                     />
                   </div>
                 </div>
@@ -324,7 +324,7 @@ export default function ClientManagementModal({
                     type="submit"
                     className="px-4 py-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center space-x-1.5"
                   >
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <Check className="w-3.5 h-3.5 text-stone-300" />
                     <span>{editingClientId ? 'Guardar Cambios' : 'Registrar Cliente'}</span>
                   </button>
                 </div>
@@ -408,7 +408,7 @@ export default function ClientManagementModal({
                       <button
                         type="button"
                         onClick={() => handleDeleteClient(client.id, client.name)}
-                        className="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        className="p-1.5 text-stone-400 hover:text-stone-900 hover:bg-stone-200 rounded-lg transition-colors"
                         title="Eliminar del directorio"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -421,7 +421,7 @@ export default function ClientManagementModal({
                       className="px-2.5 py-1.5 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl flex items-center space-x-1 shadow-2xs transition-all active:scale-[0.98]"
                       title="Rellenar cotización o factura con este cliente"
                     >
-                      <SendHorizontal className="w-3 h-3 text-rose-400" />
+                      <SendHorizontal className="w-3 h-3 text-stone-300" />
                       <span>Usar en Doc</span>
                     </button>
                   </div>
