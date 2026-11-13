@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'BrittanySignature';
+  src: url('../fonts/font_374.ttf') format('truetype'),
+       url('./fonts/font_374.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Benedict';
+  src: url('../fonts/font_366.ttf') format('truetype'),
+       url('./fonts/font_366.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-cursive: 'Benedict', 'Alex Brush', 'Caveat', 'Great Vibes', cursive;
+  --font-signature: 'BrittanySignature', 'Alex Brush', 'Great Vibes', cursive;
+}
+
+.font-script {
+  font-family: var(--font-cursive);
+}
+
+.font-signature {
+  font-family: var(--font-signature);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #c5b49b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9d886e;
+}
+
+/* Print styles for pristine document printing */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  #quote-document-canvas,
+  #invoice-document-canvas {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}
