@@ -784,16 +784,32 @@ export default function Form({
                   key={modIdx}
                   className="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-2"
                 >
-                  <div className="flex items-center space-x-2">
-                    <span className="w-5 h-5 rounded bg-stone-900 text-white font-mono text-xs flex items-center justify-center font-bold">
-                      {mod.number || modIdx + 1}
-                    </span>
-                    <input
-                      type="text"
-                      value={mod.title}
-                      onChange={(e) => handleUpdateModule(modIdx, 'title', e.target.value)}
-                      className="flex-1 px-2 py-1 bg-white border border-stone-300 rounded text-xs font-bold text-stone-900 outline-none"
-                    />
+                  <div className="flex items-center justify-between space-x-2">
+                    <div className="flex items-center space-x-2 flex-1">
+                      <span className="w-5 h-5 rounded bg-stone-900 text-white font-mono text-xs flex items-center justify-center font-bold shrink-0">
+                        {mod.number || modIdx + 1}
+                      </span>
+                      <input
+                        type="text"
+                        value={mod.title}
+                        onChange={(e) => handleUpdateModule(modIdx, 'title', e.target.value)}
+                        className="flex-1 px-2 py-1 bg-white border border-stone-300 rounded text-xs font-bold text-stone-900 outline-none"
+                      />
+                    </div>
+                    {masterClassDoc.modules?.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...(masterClassDoc.modules || [])];
+                          updated.splice(modIdx, 1);
+                          updateCurrentDoc('modules', updated);
+                        }}
+                        className="p-1 text-stone-400 hover:text-rose-600 transition-colors"
+                        title="Eliminar este módulo completo"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
 
                   <div className="pl-4 space-y-1">
@@ -825,6 +841,59 @@ export default function Form({
                   </div>
                 </div>
               ))}
+
+              {/* Add New Module Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  const newMod = {
+                    number: (masterClassDoc.modules?.length || 0) + 1,
+                    title: 'Nuevo Módulo Especializado',
+                    topics: ['Técnica profesional avanzada', 'Demostración paso a paso']
+                  };
+                  updateCurrentDoc('modules', [...(masterClassDoc.modules || []), newMod]);
+                }}
+                className="w-full py-2 bg-stone-100 hover:bg-stone-200 border border-dashed border-stone-300 rounded-xl text-xs font-semibold text-stone-700 transition-colors flex items-center justify-center space-x-1.5"
+              >
+                <Plus className="w-3.5 h-3.5 text-stone-600" />
+                <span>+ Agregar Nuevo Módulo</span>
+              </button>
+
+              {/* Practice Section Editor */}
+              <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-2 pt-3">
+                <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                  <span>Sección de Práctica con Modelo</span>
+                </h4>
+                <div>
+                  <label className="block text-[11px] font-semibold text-stone-600 mb-1">
+                    Título de la Sección:
+                  </label>
+                  <input
+                    type="text"
+                    value={masterClassDoc.practiceSection?.title || 'Práctica con Modelo'}
+                    onChange={(e) => updateCurrentDoc('practiceSection', {
+                      ...(masterClassDoc.practiceSection || {}),
+                      title: e.target.value
+                    })}
+                    className="w-full px-2 py-1 bg-white border border-stone-300 rounded text-xs font-semibold outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold text-stone-600 mb-1">
+                    Descripción / Metodología de la Práctica:
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={masterClassDoc.practiceSection?.text || DEFAULT_MASTER_CLASS.practiceSection.text}
+                    onChange={(e) => updateCurrentDoc('practiceSection', {
+                      ...(masterClassDoc.practiceSection || {}),
+                      text: e.target.value
+                    })}
+                    className="w-full px-2 py-1 bg-white border border-stone-300 rounded text-xs outline-none leading-relaxed"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         )}

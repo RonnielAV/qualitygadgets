@@ -313,7 +313,7 @@ export const DEFAULT_MASTER_CLASS = {
   instagram: "@eliottemua",
   currency: "USD",
   activePage: "proposal", // 'cover' | 'page1' | 'page2' | 'page3' | 'proposal'
-  displayMode: "artistic", // 'artistic' (Original Canva High-Fashion) | 'custom' (Fully editable modules)
+  displayMode: "dynamic", // 'dynamic' (Live Editable Modules) | 'artistic' (Original Canva High-Fashion)
   logoVariant: "white",
   fontTheme: "cursive_signature",
   customNote: "Para reservar la fecha de la Master Class se requiere el abono del 50% de anticipo. El saldo restante debe completarse antes de iniciar el taller.",

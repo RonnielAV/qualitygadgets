@@ -727,6 +727,7 @@ export default function App() {
                   masterClassRef={masterClassRef}
                   activePage={activeMasterClassPage}
                   setActivePage={setActiveMasterClassPage}
+                  onUpdateDisplayMode={(mode) => setMasterClassDoc(prev => ({ ...prev, displayMode: mode }))}
                 />
               )}
             </DocumentCanvasViewer>
