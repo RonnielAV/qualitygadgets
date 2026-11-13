@@ -50,9 +50,9 @@ export default function PreviewMasterClass({
 
   // Shared Header for Editorial pages
   const renderHeader = (titleText) => (
-    <div className="bg-[#5c5c5c] text-white px-6 sm:px-8 py-3.5 sm:py-4 flex items-center justify-between z-10 shrink-0 border-b border-stone-600 shadow-sm">
+    <div className="bg-[#5c5c5c] text-white px-8 py-4 flex items-center justify-between z-10 shrink-0 border-b border-stone-600 shadow-sm">
       <h1
-        className="text-xl sm:text-2xl text-white tracking-wide"
+        className="text-2xl text-white tracking-wide"
         style={{
           fontFamily: unifiedFamily,
           fontWeight: isCursive ? 600 : 700,
@@ -74,12 +74,12 @@ export default function PreviewMasterClass({
 
   // Shared Footer for Editorial pages
   const renderFooter = () => (
-    <div className="bg-[#5c5c5c] text-white px-6 sm:px-8 py-3 flex items-center justify-between z-10 shrink-0 border-t border-stone-600">
+    <div className="bg-[#5c5c5c] text-white px-8 py-3 flex items-center justify-between z-10 shrink-0 border-t border-stone-600">
       <div className="bg-white p-1 rounded-sm shadow-sm shrink-0">
         <img
           src="./assets/qr_code.png"
           alt="QR Code"
-          className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+          className="w-10 h-10 object-contain"
         />
       </div>
 
@@ -93,7 +93,7 @@ export default function PreviewMasterClass({
         <img
           src="./assets/qr_code.png"
           alt="QR Code"
-          className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+          className="w-10 h-10 object-contain"
         />
       </div>
     </div>
@@ -174,10 +174,10 @@ export default function PreviewMasterClass({
       {renderWatermarkBackground()}
       {renderHeader('Programa • Fundamentos & Teoría')}
 
-      <div className="relative z-10 flex-1 px-6 sm:px-10 py-6 overflow-y-auto flex flex-col justify-start space-y-6">
+      <div className="relative z-10 flex-1 px-8 py-6 overflow-y-auto flex flex-col justify-start space-y-6">
         {/* Statement / Quote Card */}
-        <div className="bg-[#5c5c5c] text-white p-4 sm:p-5 rounded-2xl shadow-sm space-y-2 border border-stone-600">
-          <p className="text-xs sm:text-[13px] leading-relaxed italic text-stone-100" style={{ fontFamily: typewriterFont }}>
+        <div className="bg-[#5c5c5c] text-white p-5 rounded-2xl shadow-sm space-y-2 border border-stone-600">
+          <p className="text-[13px] leading-relaxed italic text-stone-100" style={{ fontFamily: typewriterFont }}>
             "{syllabusQuote || DEFAULT_MASTER_CLASS.syllabusQuote}"
           </p>
           <p className="text-right font-bold text-xs text-stone-300">
@@ -192,14 +192,14 @@ export default function PreviewMasterClass({
               key={mod.id || idx}
               className="p-5 bg-stone-50 rounded-2xl border border-stone-200/90 shadow-2xs flex items-start space-x-4"
             >
-              <div className="text-4xl sm:text-5xl font-black text-stone-900 font-serif shrink-0 leading-none pt-0.5 w-10 text-center">
+              <div className="text-5xl font-black text-stone-900 font-serif shrink-0 leading-none pt-0.5 w-10 text-center">
                 {mod.number || (idx + 1)}
               </div>
               <div className="flex-1 space-y-2">
-                <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-tight" style={{ fontFamily: headingFont }}>
+                <h3 className="font-bold text-base text-stone-900 tracking-tight" style={{ fontFamily: headingFont }}>
                   {mod.title}
                 </h3>
-                <ul className="space-y-1.5 text-xs sm:text-[13px] text-stone-800 leading-snug" style={{ fontFamily: typewriterFont }}>
+                <ul className="space-y-1.5 text-[13px] text-stone-800 leading-snug" style={{ fontFamily: typewriterFont }}>
                   {mod.topics?.map((top, tIdx) => (
                     <li key={tIdx} className="flex items-start space-x-2">
                       <span className="font-bold text-stone-900 shrink-0">•</span>
@@ -252,20 +252,20 @@ export default function PreviewMasterClass({
       {renderWatermarkBackground()}
       {renderHeader('Programa • Técnicas PRO & Rostro')}
 
-      <div className="relative z-10 flex-1 px-6 sm:px-10 py-6 overflow-y-auto flex flex-col justify-start space-y-5">
+      <div className="relative z-10 flex-1 px-8 py-6 overflow-y-auto flex flex-col justify-start space-y-5">
         {modules.slice(2, 5).map((mod, idx) => (
           <div 
             key={mod.id || idx}
-            className="p-4 sm:p-5 bg-stone-50 rounded-2xl border border-stone-200/90 shadow-2xs flex items-start space-x-4"
+            className="p-5 bg-stone-50 rounded-2xl border border-stone-200/90 shadow-2xs flex items-start space-x-4"
           >
-            <div className="text-4xl sm:text-5xl font-black text-stone-900 font-serif shrink-0 leading-none pt-0.5 w-10 text-center">
+            <div className="text-5xl font-black text-stone-900 font-serif shrink-0 leading-none pt-0.5 w-10 text-center">
               {mod.number || (idx + 3)}
             </div>
             <div className="flex-1 space-y-2">
-              <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-tight" style={{ fontFamily: headingFont }}>
+              <h3 className="font-bold text-base text-stone-900 tracking-tight" style={{ fontFamily: headingFont }}>
                 {mod.title}
               </h3>
-              <ul className="space-y-1.5 text-xs sm:text-[13px] text-stone-800 leading-snug" style={{ fontFamily: typewriterFont }}>
+              <ul className="space-y-1.5 text-[13px] text-stone-800 leading-snug" style={{ fontFamily: typewriterFont }}>
                 {mod.topics?.map((top, tIdx) => (
                   <li key={tIdx} className="flex items-start space-x-2">
                     <span className="font-bold text-stone-900 shrink-0">•</span>
@@ -317,21 +317,21 @@ export default function PreviewMasterClass({
       {renderWatermarkBackground()}
       {renderHeader('Programa • Especializaciones & Práctica')}
 
-      <div className="relative z-10 flex-1 px-6 sm:px-10 py-5 overflow-y-auto flex flex-col justify-start space-y-4">
+      <div className="relative z-10 flex-1 px-8 py-5 overflow-y-auto flex flex-col justify-start space-y-4">
         {/* Modules 6, 7 and any 8, 9, 10... */}
         {modules.slice(5).map((mod, idx) => (
           <div 
             key={mod.id || idx}
-            className="p-4 sm:p-4.5 bg-stone-50 rounded-2xl border border-stone-200/90 shadow-2xs flex items-start space-x-4"
+            className="p-5 bg-stone-50 rounded-2xl border border-stone-200/90 shadow-2xs flex items-start space-x-4"
           >
-            <div className="text-4xl sm:text-5xl font-black text-stone-900 font-serif shrink-0 leading-none pt-0.5 w-10 text-center">
+            <div className="text-5xl font-black text-stone-900 font-serif shrink-0 leading-none pt-0.5 w-10 text-center">
               {mod.number || (idx + 6)}
             </div>
             <div className="flex-1 space-y-1.5">
-              <h3 className="font-bold text-sm sm:text-base text-stone-900 tracking-tight" style={{ fontFamily: headingFont }}>
+              <h3 className="font-bold text-base text-stone-900 tracking-tight" style={{ fontFamily: headingFont }}>
                 {mod.title}
               </h3>
-              <ul className="space-y-1 text-xs sm:text-[12.5px] text-stone-800 leading-snug" style={{ fontFamily: typewriterFont }}>
+              <ul className="space-y-1 text-[13px] text-stone-800 leading-snug" style={{ fontFamily: typewriterFont }}>
                 {mod.topics?.map((top, tIdx) => (
                   <li key={tIdx} className="flex items-start space-x-2">
                     <span className="font-bold text-stone-900 shrink-0">•</span>
@@ -344,14 +344,14 @@ export default function PreviewMasterClass({
         ))}
 
         {/* Práctica con Modelo Section */}
-        <div className="p-4 sm:p-5 bg-[#5c5c5c] text-white rounded-2xl shadow-sm space-y-2 border border-stone-600 mt-2">
+        <div className="p-5 bg-[#5c5c5c] text-white rounded-2xl shadow-sm space-y-2 border border-stone-600 mt-2">
           <div className="flex items-center space-x-2">
             <span className="w-2 h-2 rounded-full bg-white inline-block"></span>
-            <h4 className="font-bold text-xs sm:text-sm tracking-wider uppercase text-white">
+            <h4 className="font-bold text-sm tracking-wider uppercase text-white">
               {practiceSection?.title || 'Práctica con Modelo'}
             </h4>
           </div>
-          <p className="text-xs sm:text-[12.5px] text-stone-100 leading-relaxed italic" style={{ fontFamily: typewriterFont }}>
+          <p className="text-[13px] text-stone-100 leading-relaxed italic" style={{ fontFamily: typewriterFont }}>
             {practiceSection?.text || DEFAULT_MASTER_CLASS.practiceSection.text}
           </p>
         </div>
@@ -378,7 +378,7 @@ export default function PreviewMasterClass({
 
       {/* Body with Locations & Packages */}
       <div
-        className="relative z-10 flex-1 px-6 sm:px-12 py-6 overflow-y-auto flex flex-col justify-start space-y-6"
+        className="relative z-10 flex-1 px-8 py-6 overflow-y-auto flex flex-col justify-start space-y-6"
         style={{ fontFamily: unifiedFamily }}
       >
         {locations.map((loc, idx) => (
@@ -387,14 +387,14 @@ export default function PreviewMasterClass({
             className="space-y-3 pb-5 border-b border-stone-200 last:border-b-0"
           >
             {/* Location / Package Header */}
-            <h3 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight flex items-center space-x-2">
+            <h3 className="text-xl font-bold text-stone-900 tracking-tight flex items-center space-x-2">
               <span className="w-2.5 h-2.5 rounded-full bg-stone-900 inline-block"></span>
               <span>{loc.name}</span>
             </h3>
 
             {/* Price and Min participants in Courier/Typewriter style */}
-            <div className="space-y-1 pl-4 text-xs sm:text-sm text-stone-900">
-              <p className="font-semibold text-stone-900 text-sm sm:text-base">
+            <div className="space-y-1 pl-4 text-sm text-stone-900">
+              <p className="font-semibold text-stone-900 text-base">
                 Costo por participante: <span className="font-bold text-stone-950">{formatPrice(loc.costPerPerson, loc.currency || currency)}</span>
               </p>
               <p className="text-stone-700">
@@ -404,10 +404,10 @@ export default function PreviewMasterClass({
 
             {/* Includes List */}
             <div className="pl-4 pt-1 space-y-1.5">
-              <p className="text-xs sm:text-sm font-bold text-stone-900">
+              <p className="text-sm font-bold text-stone-900">
                 Incluye:
               </p>
-              <ul className="space-y-1 text-xs sm:text-sm text-stone-800 pl-3">
+              <ul className="space-y-1 text-sm text-stone-800 pl-3">
                 {loc.includes?.map((item, i) => (
                   <li key={i} className="flex items-start space-x-2 leading-relaxed">
                     <span className="text-stone-900 font-bold shrink-0">•</span>
@@ -419,7 +419,7 @@ export default function PreviewMasterClass({
 
             {/* Specific Note */}
             {loc.note && (
-              <div className="pl-4 pt-1 text-xs sm:text-sm text-stone-900 font-semibold italic">
+              <div className="pl-4 pt-1 text-sm text-stone-900 font-semibold italic">
                 Nota: {loc.note}
               </div>
             )}
@@ -428,7 +428,7 @@ export default function PreviewMasterClass({
 
         {/* General Custom Note */}
         {customNote && (
-          <div className="mt-4 p-3 bg-stone-50 border-l-2 border-stone-900 text-xs sm:text-sm text-stone-800 whitespace-pre-line">
+          <div className="mt-4 p-3 bg-stone-50 border-l-2 border-stone-900 text-sm text-stone-800 whitespace-pre-line">
             {customNote}
           </div>
         )}
@@ -456,7 +456,7 @@ export default function PreviewMasterClass({
   };
 
   return (
-    <div className="flex flex-col items-center p-0 sm:p-2 select-none w-full">
+    <div className="flex flex-col items-center p-0 select-none w-full">
       {/* ================= PAGE SELECTOR TOOLBAR ================= */}
       <div className="no-print mb-4 w-full max-w-[760px] bg-white p-2.5 rounded-2xl shadow-sm border border-stone-200 flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex items-center space-x-1 overflow-x-auto py-0.5">

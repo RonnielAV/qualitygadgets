@@ -70,7 +70,7 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
 
   // Render Table of Items
   const renderItemsTable = (pageItems) => (
-    <table className="w-full text-left border-collapse text-xs sm:text-sm">
+    <table className="w-full text-left border-collapse text-sm">
       <thead>
         <tr className="border-b-2 border-stone-900 text-stone-900 uppercase tracking-wider text-[11px] font-bold">
           <th className="py-2.5 w-16 text-center">Cant.</th>
@@ -130,7 +130,7 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
       </div>
 
       {/* Calculations Box with Unified Font */}
-      <div className="w-64 space-y-2 text-xs sm:text-sm" style={{ fontFamily: unifiedFamily }}>
+      <div className="w-64 space-y-2 text-sm" style={{ fontFamily: unifiedFamily }}>
         <div className="flex justify-between py-1 border-b border-stone-200 text-stone-700">
           <span>Subtotal:</span>
           <span className="font-semibold">{formatCurrency(subtotal)}</span>
@@ -141,7 +141,7 @@ export default function PreviewInvoice({ doc, invoiceRef }) {
             <span>-{formatCurrency(discountAmount)}</span>
           </div>
         )}
-        <div className="flex justify-between py-2.5 border-b-2 border-stone-900 text-stone-900 text-base sm:text-lg font-bold">
+        <div className="flex justify-between py-2.5 border-b-2 border-stone-900 text-stone-900 text-lg font-bold">
           <span>TOTAL:</span>
           <span>{formatCurrency(grandTotal)}</span>
         </div>

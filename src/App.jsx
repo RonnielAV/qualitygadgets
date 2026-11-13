@@ -143,7 +143,13 @@ export default function App() {
       if (savedAuto) {
         const parsed = JSON.parse(savedAuto);
         if (parsed.docType) setDocType(parsed.docType);
-        if (parsed.quoteDoc) setQuoteDoc(parsed.quoteDoc);
+        if (parsed.quoteDoc) {
+          const loadedQuote = parsed.quoteDoc;
+          if (loadedQuote.subtitle && loadedQuote.subtitle.toLowerCase().trim() === 'quinceañera') {
+            loadedQuote.subtitle = '';
+          }
+          setQuoteDoc(loadedQuote);
+        }
         if (parsed.invoiceDoc) setInvoiceDoc(parsed.invoiceDoc);
         if (parsed.masterClassDoc) setMasterClassDoc(parsed.masterClassDoc);
         if (parsed.activeMasterClassPage) setActiveMasterClassPage(parsed.activeMasterClassPage);

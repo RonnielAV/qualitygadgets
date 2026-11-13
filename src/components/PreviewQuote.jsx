@@ -23,6 +23,12 @@ export default function PreviewQuote({ doc, quoteRef }) {
     fontTheme = 'canva_caveat',
     logoVariant = 'white', // 'white' | 'black' | 'grey'
     showQr = true,
+    layoutMode = 'spread', // 'spread' (de margen a margen) | 'center' (centrado)
+    // Dynamic text size controls
+    titleSize,
+    subtitleSize,
+    bodySize,
+    numberSize,
   } = doc;
 
   const currentBg = customBgUrl || bgImage;
@@ -32,6 +38,24 @@ export default function PreviewQuote({ doc, quoteRef }) {
   const unifiedFamily = activeFont.fontFamily;
   const isCursive = activeFont.isCursive;
   const letterSpacing = activeFont.letterSpacing || 'normal';
+
+  // Resolved dynamic font sizes (in pixels on the 750px canvas)
+  const defaultTitleSize = isCursive ? 44 : 32;
+  const defaultSubtitleSize = isCursive ? 38 : 28;
+  const defaultBodySize = isCursive ? 34 : 26;
+  const defaultNumberSize = isCursive ? 36 : 28;
+
+  const resolvedTitleSize = Number(titleSize) || defaultTitleSize;
+  const resolvedSubtitleSize = Number(subtitleSize) || defaultSubtitleSize;
+  const resolvedBodySize = Number(bodySize) || defaultBodySize;
+  const resolvedNumberSize = Number(numberSize) || defaultNumberSize;
+  const resolvedTotalSize = Math.round(resolvedNumberSize * 1.3);
+  const resolvedItemNoteSize = Math.max(12, Math.round(resolvedBodySize * 0.8));
+  const resolvedDocNoteSize = Math.max(13, Math.round(resolvedBodySize * 0.72));
+
+  // Purge any unwanted "Quinceañera" from the header banner
+  const cleanSubtitle = (subtitle || '').trim();
+  const shouldShowSubtitle = cleanSubtitle && cleanSubtitle.toLowerCase() !== 'quinceañera';
 
   // Resolve logo image by contrast
   const getLogoSrc = (variant) => {
@@ -104,12 +128,12 @@ export default function PreviewQuote({ doc, quoteRef }) {
             }}
           >
             {/* ================= TOP HEADER (CHARCOAL BANNER) ================= */}
-            <div className="bg-[#525558] text-white px-6 sm:px-8 py-3 sm:py-4 flex items-center justify-between z-20 shrink-0 border-b border-stone-600/60 shadow-sm">
+            <div className="bg-[#525558] text-white px-8 py-3.5 flex items-center justify-between z-20 shrink-0 border-b border-stone-600/60 shadow-sm">
               <div className="flex items-center">
                 <img
                   src={headerLogoSrc}
                   alt="Eliotte MUA"
-                  className="h-11 sm:h-14 md:h-16 w-auto object-contain drop-shadow"
+                  className="h-16 w-auto object-contain drop-shadow"
                 />
               </div>
 
@@ -117,27 +141,28 @@ export default function PreviewQuote({ doc, quoteRef }) {
                 <h1
                   className={`leading-tight tracking-wide ${
                     isCursive 
-                      ? 'text-3xl sm:text-4xl md:text-5xl font-semibold' 
-                      : 'text-2xl sm:text-3xl md:text-4xl font-bold uppercase'
+                      ? 'font-semibold' 
+                      : 'font-bold uppercase'
                   }`}
                   style={{
                     fontFamily: unifiedFamily,
                     color: headerTitleColor,
                     letterSpacing: letterSpacing,
+                    fontSize: `${resolvedTitleSize}px`,
                     textShadow: headerTitleColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.4)' : 'none',
                   }}
                 >
                   {isFirstPage ? title : `${title} (Cont.)`}
                 </h1>
-                {subtitle && (
+                {shouldShowSubtitle && (
                   <span
-                    className="block text-xs sm:text-sm tracking-widest uppercase mt-0.5"
+                    className="block text-[14px] tracking-widest uppercase mt-0.5"
                     style={{
                       fontFamily: unifiedFamily,
                       color: headerTitleColor === '#ffffff' ? '#e2e8f0' : '#262626',
                     }}
                   >
-                    {subtitle}
+                    {cleanSubtitle}
                   </span>
                 )}
               </div>
@@ -163,66 +188,123 @@ export default function PreviewQuote({ doc, quoteRef }) {
               />
 
               {/* Watermark in bottom right of photo */}
-              <div className="absolute right-5 bottom-32 pointer-events-none opacity-25 select-none z-10">
+              <div className="absolute right-6 bottom-32 pointer-events-none opacity-25 select-none z-10">
                 <img
                   src={watermarkLogoSrc}
                   alt=""
-                  className="h-20 sm:h-28 w-auto object-contain transform -rotate-2"
+                  className="h-28 w-auto object-contain transform -rotate-2"
                 />
               </div>
 
               {/* ================= CENTER CONTENT (SERVICES, TOTALS, NOTES) ================= */}
               <div 
-                className="relative z-10 w-full px-8 sm:px-10 flex-1 flex flex-col justify-center items-center text-center py-6 my-auto space-y-5"
+                className="relative z-10 w-full px-8 flex-1 flex flex-col justify-center items-center py-6 my-auto space-y-4"
                 style={{ fontFamily: unifiedFamily }}
               >
                 {/* Optional Section Subtitle */}
                 {isFirstPage && sectionSubtitle && (
                   <div
-                    className={`text-stone-900 tracking-wide mb-1 ${
-                      isCursive ? 'text-3xl sm:text-4xl font-semibold' : 'text-xl sm:text-2xl font-bold uppercase tracking-wider'
+                    className={`text-stone-900 tracking-wide mb-2 text-center w-full ${
+                      isCursive ? 'font-semibold' : 'font-bold uppercase tracking-[0.15em]'
                     }`}
-                    style={{ fontFamily: unifiedFamily }}
+                    style={{ 
+                      fontFamily: unifiedFamily,
+                      fontSize: `${resolvedSubtitleSize}px`,
+                      letterSpacing: letterSpacing,
+                    }}
                   >
                     {sectionSubtitle}
                   </div>
                 )}
 
                 {/* Services List - Wide format spanning across margins */}
-                <div className="w-full space-y-4">
+                <div className="w-full space-y-3.5">
                   {pageItems.map((item, index) => {
                     const itemTotal = (Number(item.qty) || 1) * (Number(item.price) || 0);
                     const hasExplicitTotal = item.price !== undefined && item.price !== 0;
 
+                    if (layoutMode === 'center') {
+                      return (
+                        <div
+                          key={item.id || index}
+                          className="leading-relaxed text-stone-950 px-2 whitespace-pre-line text-center font-semibold"
+                          style={{
+                            fontFamily: unifiedFamily,
+                            letterSpacing: letterSpacing,
+                            lineHeight: 1.4,
+                            fontSize: `${resolvedBodySize}px`,
+                          }}
+                        >
+                          <span>{item.description}</span>
+                          {item.note && (
+                            <span 
+                              className="text-stone-700 italic ml-2 font-normal"
+                              style={{ fontSize: `${resolvedItemNoteSize}px` }}
+                            >
+                              ({item.note})
+                            </span>
+                          )}
+                          {hasExplicitTotal && (
+                            <span 
+                              className="font-bold ml-3.5 inline-block text-stone-950"
+                              style={{ fontSize: `${resolvedNumberSize}px` }}
+                            >
+                              {formatCurrency(itemTotal)}
+                            </span>
+                          )}
+                          {item.optional && (
+                            <span className="text-[12px] font-normal text-stone-600 uppercase tracking-wider ml-2.5 px-2 py-0.5 rounded bg-stone-200/80 align-middle">
+                              Opcional
+                            </span>
+                          )}
+                        </div>
+                      );
+                    }
+
+                    // Default: 'spread' (De Margen a Margen)
                     return (
                       <div
                         key={item.id || index}
-                        className={`leading-relaxed text-stone-950 px-2 whitespace-pre-line ${
-                          isCursive
-                            ? 'text-3xl sm:text-4xl md:text-[34px] font-semibold'
-                            : 'text-lg sm:text-xl md:text-[23px] font-semibold tracking-wide'
-                        }`}
+                        className="w-full flex items-baseline justify-between gap-4 py-1 border-b border-stone-200/50"
                         style={{
                           fontFamily: unifiedFamily,
                           letterSpacing: letterSpacing,
-                          lineHeight: 1.45,
                         }}
                       >
-                        <span>{item.description}</span>
-                        {item.note && (
-                          <span className="text-stone-700 italic ml-2 font-normal">
-                            ({item.note})
+                        <div className="text-left flex-1 min-w-0 pr-3">
+                          <span 
+                            className="text-stone-950 font-semibold"
+                            style={{ 
+                              fontSize: `${resolvedBodySize}px`,
+                              lineHeight: 1.3,
+                            }}
+                          >
+                            {item.description}
                           </span>
-                        )}
+                          {item.note && (
+                            <span 
+                              className="text-stone-600 italic ml-2.5 font-normal"
+                              style={{ fontSize: `${resolvedItemNoteSize}px` }}
+                            >
+                              ({item.note})
+                            </span>
+                          )}
+                          {item.optional && (
+                            <span className="text-[12px] font-normal text-stone-600 uppercase tracking-wider ml-2.5 px-2 py-0.5 rounded bg-stone-200/80 align-middle">
+                              Opcional
+                            </span>
+                          )}
+                        </div>
+
                         {hasExplicitTotal && (
-                          <span className="font-bold ml-3.5 inline-block">
-                            {formatCurrency(itemTotal)}
-                          </span>
-                        )}
-                        {item.optional && (
-                          <span className="text-xs sm:text-sm font-normal text-stone-600 uppercase tracking-wider ml-2 px-2 py-0.5 rounded bg-stone-200/70">
-                            Opcional
-                          </span>
+                          <div className="text-right shrink-0">
+                            <span 
+                              className="font-bold text-stone-950"
+                              style={{ fontSize: `${resolvedNumberSize}px` }}
+                            >
+                              {formatCurrency(itemTotal)}
+                            </span>
+                          </div>
                         )}
                       </div>
                     );
@@ -230,46 +312,69 @@ export default function PreviewQuote({ doc, quoteRef }) {
                 </div>
 
                 {!isLastPage && (
-                  <div className="pt-2 text-stone-600 text-xs italic">
+                  <div className="pt-2 text-stone-600 text-[14px] italic text-center w-full">
                     Continúa en la siguiente página...
                   </div>
                 )}
 
                 {/* Total Highlight (Only on Last Page) - Wide prominent bar */}
                 {isLastPage && (
-                  <div className="pt-3 pb-2 border-t-2 border-b-2 border-stone-800/60 w-full max-w-2xl my-3">
-                    <div
-                      className={`text-stone-950 font-bold ${
-                        isCursive ? 'text-3xl sm:text-4xl md:text-5xl' : 'text-2xl sm:text-3xl md:text-[32px] tracking-wide'
-                      }`}
-                      style={{
-                        fontFamily: unifiedFamily,
-                        letterSpacing: letterSpacing,
-                      }}
-                    >
-                      <span>Total: </span>
-                      <span>
-                        {formatCurrency(total)}
-                      </span>
-                    </div>
+                  <div className="pt-3.5 pb-3 border-t-2 border-b-2 border-stone-800 w-full my-3">
+                    {layoutMode === 'center' ? (
+                      <div
+                        className="text-stone-950 font-bold text-center"
+                        style={{
+                          fontFamily: unifiedFamily,
+                          letterSpacing: letterSpacing,
+                          fontSize: `${resolvedTotalSize}px`,
+                        }}
+                      >
+                        <span>Total: </span>
+                        <span>{formatCurrency(total)}</span>
+                      </div>
+                    ) : (
+                      <div
+                        className="w-full flex items-baseline justify-between"
+                        style={{
+                          fontFamily: unifiedFamily,
+                          letterSpacing: letterSpacing,
+                        }}
+                      >
+                        <span 
+                          className="text-stone-950 font-bold"
+                          style={{
+                            fontSize: `${Math.round(resolvedTotalSize * 0.9)}px`,
+                            letterSpacing: letterSpacing,
+                          }}
+                        >
+                          Total:
+                        </span>
+                        <span 
+                          className="text-stone-950 font-bold"
+                          style={{
+                            fontSize: `${resolvedTotalSize}px`,
+                            letterSpacing: letterSpacing,
+                          }}
+                        >
+                          {formatCurrency(total)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* Notes & Bank Details (Only on Last Page) - Wide and legible */}
                 {isLastPage && notes && (
-                  <div className="pt-2 w-full max-w-2xl mx-auto">
+                  <div className={`pt-2 w-full ${layoutMode === 'center' ? 'text-center' : 'text-left'}`}>
                     <div
-                      className={`text-stone-900 leading-relaxed whitespace-pre-line ${
-                        isCursive
-                          ? 'text-xl sm:text-2xl font-medium'
-                          : 'text-sm sm:text-base md:text-[17px] font-medium tracking-wide'
-                      }`}
+                      className="text-stone-900 leading-relaxed whitespace-pre-line font-medium"
                       style={{
                         fontFamily: unifiedFamily,
                         letterSpacing: letterSpacing,
+                        fontSize: `${resolvedDocNoteSize}px`,
                       }}
                     >
-                      <p className="font-bold text-stone-950 text-xs sm:text-sm uppercase tracking-widest mb-1.5">
+                      <p className="font-bold text-stone-950 text-[14px] uppercase tracking-[0.2em] mb-1.5">
                         NOTA :
                       </p>
                       {notes}

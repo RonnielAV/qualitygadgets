@@ -339,6 +339,8 @@ export default function Form({
   };
 
   const currentFontTheme = (isQuote ? quoteDoc : (isInvoice ? invoiceDoc : masterClassDoc)).fontTheme || 'canva_caveat';
+  const activeFontObj = FONT_THEMES.find(t => t.id === currentFontTheme) || FONT_THEMES[0];
+  const isCursive = activeFontObj?.isCursive ?? true;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden flex flex-col h-full">
@@ -1070,7 +1072,7 @@ export default function Form({
 
             {/* Document Header Text Customization */}
             <div className="pt-4 border-t border-stone-200 space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
                     Título de Cabecera
@@ -1086,7 +1088,20 @@ export default function Form({
 
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    Subtítulo Central (opcional)
+                    Subtítulo Cabecera (Banner)
+                  </label>
+                  <input
+                    type="text"
+                    value={quoteDoc.subtitle || ''}
+                    onChange={(e) => updateCurrentDoc('subtitle', e.target.value)}
+                    placeholder="Opcional (dejar vacío si no se desea)"
+                    className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-2 focus:ring-stone-400 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">
+                    Subtítulo Central (Hoja)
                   </label>
                   <input
                     type="text"
@@ -1651,6 +1666,58 @@ export default function Form({
         {/* ----------------- TYPOGRAPHY & LOGO (Unified Formats for All Sections) ----------------- */}
         {!isMasterClass && activeTab === 'typography' && (
           <div className="space-y-5">
+            {isQuote && (
+              <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
+                    <span>Distribución de Contenido en la Hoja:</span>
+                  </label>
+                  <span className="text-[11px] text-stone-600 font-medium">
+                    {(quoteDoc.layoutMode || 'spread') === 'spread' ? '↔️ De Margen a Margen' : '⏺️ Centrado Editorial'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-stone-500">
+                  Elige cómo se ordenan los servicios y precios en la cotización:
+                </p>
+
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => updateCurrentDoc('layoutMode', 'spread')}
+                    className={`p-2.5 rounded-xl border-2 text-left transition-all ${
+                      (quoteDoc.layoutMode || 'spread') === 'spread'
+                        ? 'border-stone-900 bg-white shadow-xs ring-1 ring-stone-400'
+                        : 'border-stone-200 hover:border-stone-300 bg-stone-100/60'
+                    }`}
+                  >
+                    <span className="font-bold text-xs text-stone-900 block">
+                      ↔️ De Margen a Margen
+                    </span>
+                    <span className="text-[10px] text-stone-500 block mt-0.5 leading-tight">
+                      Servicios a la izquierda y montos a la derecha, ocupando todo el ancho de la hoja.
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => updateCurrentDoc('layoutMode', 'center')}
+                    className={`p-2.5 rounded-xl border-2 text-left transition-all ${
+                      quoteDoc.layoutMode === 'center'
+                        ? 'border-stone-900 bg-white shadow-xs ring-1 ring-stone-400'
+                        : 'border-stone-200 hover:border-stone-300 bg-stone-100/60'
+                    }`}
+                  >
+                    <span className="font-bold text-xs text-stone-900 block">
+                      ⏺️ Centrado Editorial (Canva)
+                    </span>
+                    <span className="text-[10px] text-stone-500 block mt-0.5 leading-tight">
+                      Texto centrado en bloque con tipografía grande y elegante.
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <h3 className="text-sm font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
@@ -1699,6 +1766,197 @@ export default function Form({
                     </button>
                   );
                 })}
+              </div>
+            </div>
+
+            {/* Font Size Sliders (Lienzo en Píxeles) */}
+            <div className="pt-4 border-t border-stone-200">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-bold text-stone-900 uppercase tracking-wider flex items-center space-x-1.5">
+                  <Sliders className="w-4 h-4 text-stone-700" />
+                  <span>Tamaño de Texto (Lienzo en Píxeles):</span>
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    updateCurrentDoc('titleSize', undefined);
+                    updateCurrentDoc('subtitleSize', undefined);
+                    updateCurrentDoc('bodySize', undefined);
+                    updateCurrentDoc('numberSize', undefined);
+                  }}
+                  className="text-[11px] text-stone-600 hover:text-stone-900 font-semibold underline hover:no-underline"
+                >
+                  Restablecer Predeterminados
+                </button>
+              </div>
+              <p className="text-xs text-stone-500 mb-3.5">
+                Personaliza con precisión el tamaño de cada nivel tipográfico en la hoja:
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50/80 p-3.5 rounded-xl border border-stone-200">
+                {/* 1. Título */}
+                <div className="bg-white p-3 rounded-lg border border-stone-200/80 shadow-xs">
+                  <div className="flex items-center justify-between text-xs mb-1.5">
+                    <span className="font-semibold text-stone-800">1. Título (Cabecera)</span>
+                    <span className="font-mono font-bold text-stone-800 bg-stone-100 px-2 py-0.5 rounded text-[11px] border border-stone-200">
+                      {(isQuote ? quoteDoc : invoiceDoc).titleSize || (isCursive ? 44 : 32)} px
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cur = (isQuote ? quoteDoc : invoiceDoc).titleSize || (isCursive ? 44 : 32);
+                        updateCurrentDoc('titleSize', Math.max(20, cur - 2));
+                      }}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-stone-100 border border-stone-200 text-stone-700 font-bold hover:bg-stone-200 transition-colors"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="range"
+                      min="20"
+                      max="64"
+                      step="1"
+                      value={(isQuote ? quoteDoc : invoiceDoc).titleSize || (isCursive ? 44 : 32)}
+                      onChange={(e) => updateCurrentDoc('titleSize', Number(e.target.value))}
+                      className="flex-1 accent-stone-900 cursor-pointer h-1.5 bg-stone-200 rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cur = (isQuote ? quoteDoc : invoiceDoc).titleSize || (isCursive ? 44 : 32);
+                        updateCurrentDoc('titleSize', Math.min(64, cur + 2));
+                      }}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-stone-100 border border-stone-200 text-stone-700 font-bold hover:bg-stone-200 transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. Subtítulo */}
+                <div className="bg-white p-3 rounded-lg border border-stone-200/80 shadow-xs">
+                  <div className="flex items-center justify-between text-xs mb-1.5">
+                    <span className="font-semibold text-stone-800">2. Subtítulo (Price List / Sección)</span>
+                    <span className="font-mono font-bold text-stone-800 bg-stone-100 px-2 py-0.5 rounded text-[11px] border border-stone-200">
+                      {(isQuote ? quoteDoc : invoiceDoc).subtitleSize || (isCursive ? 38 : 28)} px
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cur = (isQuote ? quoteDoc : invoiceDoc).subtitleSize || (isCursive ? 38 : 28);
+                        updateCurrentDoc('subtitleSize', Math.max(16, cur - 2));
+                      }}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-stone-100 border border-stone-200 text-stone-700 font-bold hover:bg-stone-200 transition-colors"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="range"
+                      min="16"
+                      max="52"
+                      step="1"
+                      value={(isQuote ? quoteDoc : invoiceDoc).subtitleSize || (isCursive ? 38 : 28)}
+                      onChange={(e) => updateCurrentDoc('subtitleSize', Number(e.target.value))}
+                      className="flex-1 accent-stone-900 cursor-pointer h-1.5 bg-stone-200 rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cur = (isQuote ? quoteDoc : invoiceDoc).subtitleSize || (isCursive ? 38 : 28);
+                        updateCurrentDoc('subtitleSize', Math.min(52, cur + 2));
+                      }}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-stone-100 border border-stone-200 text-stone-700 font-bold hover:bg-stone-200 transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3. Cuerpo */}
+                <div className="bg-white p-3 rounded-lg border border-stone-200/80 shadow-xs">
+                  <div className="flex items-center justify-between text-xs mb-1.5">
+                    <span className="font-semibold text-stone-800">3. Cuerpo (Servicios y Notas)</span>
+                    <span className="font-mono font-bold text-stone-800 bg-stone-100 px-2 py-0.5 rounded text-[11px] border border-stone-200">
+                      {(isQuote ? quoteDoc : invoiceDoc).bodySize || (isCursive ? 34 : 26)} px
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cur = (isQuote ? quoteDoc : invoiceDoc).bodySize || (isCursive ? 34 : 26);
+                        updateCurrentDoc('bodySize', Math.max(14, cur - 1));
+                      }}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-stone-100 border border-stone-200 text-stone-700 font-bold hover:bg-stone-200 transition-colors"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="range"
+                      min="14"
+                      max="48"
+                      step="1"
+                      value={(isQuote ? quoteDoc : invoiceDoc).bodySize || (isCursive ? 34 : 26)}
+                      onChange={(e) => updateCurrentDoc('bodySize', Number(e.target.value))}
+                      className="flex-1 accent-stone-900 cursor-pointer h-1.5 bg-stone-200 rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cur = (isQuote ? quoteDoc : invoiceDoc).bodySize || (isCursive ? 34 : 26);
+                        updateCurrentDoc('bodySize', Math.min(48, cur + 1));
+                      }}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-stone-100 border border-stone-200 text-stone-700 font-bold hover:bg-stone-200 transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* 4. Números */}
+                <div className="bg-white p-3 rounded-lg border border-stone-200/80 shadow-xs">
+                  <div className="flex items-center justify-between text-xs mb-1.5">
+                    <span className="font-semibold text-stone-800">4. Números (Precios y Total)</span>
+                    <span className="font-mono font-bold text-stone-800 bg-stone-100 px-2 py-0.5 rounded text-[11px] border border-stone-200">
+                      {(isQuote ? quoteDoc : invoiceDoc).numberSize || (isCursive ? 36 : 28)} px
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cur = (isQuote ? quoteDoc : invoiceDoc).numberSize || (isCursive ? 36 : 28);
+                        updateCurrentDoc('numberSize', Math.max(16, cur - 1));
+                      }}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-stone-100 border border-stone-200 text-stone-700 font-bold hover:bg-stone-200 transition-colors"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="range"
+                      min="16"
+                      max="56"
+                      step="1"
+                      value={(isQuote ? quoteDoc : invoiceDoc).numberSize || (isCursive ? 36 : 28)}
+                      onChange={(e) => updateCurrentDoc('numberSize', Number(e.target.value))}
+                      className="flex-1 accent-stone-900 cursor-pointer h-1.5 bg-stone-200 rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cur = (isQuote ? quoteDoc : invoiceDoc).numberSize || (isCursive ? 36 : 28);
+                        updateCurrentDoc('numberSize', Math.min(56, cur + 1));
+                      }}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-stone-100 border border-stone-200 text-stone-700 font-bold hover:bg-stone-200 transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
